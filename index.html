@@ -3,149 +3,301 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CalvinsonIT · Who ChatGPT recommends instead of you</title>
-<meta name="description" content="A $299 founding audit. Pay. Answer three questions at checkout. Get the file — who ChatGPT recommends instead of you, reviewed by the founder, in five business days.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Manrope:wght@400;500;700&display=swap">
+<title>AI Answer Visibility Audit · CalvinsonIT</title>
+<meta name="description" content="Find out who ChatGPT, Perplexity and Google AI recommend instead of you, and the first page to fix. Founding offer: $299, delivered in 5 business days, reviewed by the founder, full refund if we find nothing to fix.">
+<meta property="og:title" content="AI Answer Visibility Audit · founding offer, $299">
+<meta property="og:description" content="Ten buying questions, four answer engines, every citation traced. Delivered in 5 business days. No call.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-  :root {
-    --ink:#0B1220;
-    --ink-2:#0E1626;
-    --line:#243049;
-    --paper:#E6EAF2;
-    --muted:#A9B4C6;
-    --accent:#FF6B35;
-    --mint:#5BE3B0;
-    --white:#fff;
+  :root{
+    --ink:#0B1220; --ink-2:#1B2436; --line-d:#243049;
+    --paper:#FBFAF6; --paper-2:#F1EEE6; --line:#E3DFD4;
+    --text:#0F172A; --text-2:#475569; --text-3:#7C8797; --text-d:#E6EAF2; --text-d2:#A9B4C6;
+    --accent:#FF6B35; --accent-2:#FF8F66; --accent-soft:#FFE9DF; --mint:#5BE3B0; --mint-soft:#0F3B2E;
+    --disp:"Bricolage Grotesque","Manrope",system-ui,sans-serif; --sans:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
   }
-  * { box-sizing: border-box; }
-  html, body { margin:0; background:var(--ink); color:var(--paper); font-family:"Manrope",system-ui,sans-serif; font-size:17px; line-height:1.65; }
-  a { color:var(--mint); }
-  .wrap { max-width:780px; margin:0 auto; padding:36px 24px 80px; }
-  nav { display:flex; justify-content:space-between; align-items:center; margin-bottom:56px; font-size:.92rem; }
-  nav .brand { font-family:"Bricolage Grotesque",sans-serif; font-weight:800; color:var(--white); text-decoration:none; letter-spacing:-.02em; }
-  nav .links a { color:var(--muted); text-decoration:none; margin-left:18px; }
-  nav .links a:hover { color:var(--mint); }
-  .k { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--mint); margin:0 0 14px; }
-  h1 { font-family:"Bricolage Grotesque",sans-serif; font-size:clamp(2.1rem,5vw,3.15rem); font-weight:800; letter-spacing:-.03em; line-height:1.08; color:var(--white); margin:0 0 16px; }
-  h2 { font-family:"Bricolage Grotesque",sans-serif; font-size:1.35rem; font-weight:800; letter-spacing:-.02em; color:var(--white); margin:0 0 12px; }
-  .lede { color:var(--muted); font-size:1.08rem; max-width:40rem; margin:0 0 22px; }
-  .process { color:var(--white); font-weight:700; margin:0 0 28px; }
-  .btn {
-    display:inline-block; background:var(--accent); color:var(--white); text-decoration:none;
-    font-weight:700; padding:14px 22px; border-radius:10px; letter-spacing:-.01em;
+  *{box-sizing:border-box} html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--text);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--disp);line-height:1.04;margin:0;text-wrap:balance;letter-spacing:-.02em}
+  h1{font-size:clamp(2.4rem,5.6vw,4.2rem);font-weight:800}
+  h2{font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:800}
+  h3{font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+  p{margin:0 0 1em;max-width:62ch}
+  .eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  .mark{background:linear-gradient(180deg,transparent 58%,rgba(255,107,53,.45) 58%);padding:0 .06em}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--accent);color:#1A0E07;text-decoration:none;font-weight:700;padding:16px 26px;border-radius:10px;border:0;font-size:1.02rem;transition:transform .12s ease,background .12s ease;box-shadow:0 10px 30px -12px rgba(255,107,53,.7)}
+  .btn:hover{transform:translateY(-2px);background:var(--accent-2)}
+  .btn:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+  .btn.ghost{background:transparent;color:var(--text-d);border:1px solid var(--line-d);box-shadow:none}
+  .btn.light{background:var(--ink);color:#fff;box-shadow:none}
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:20;background:rgba(11,18,32,.88);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
+  .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-family:var(--disp);font-weight:800;font-size:1.05rem}
+  .brand i{width:24px;height:24px;border-radius:7px;background:conic-gradient(from 210deg,var(--accent),#FFB48F,var(--accent));display:inline-block}
+  .nav nav a{color:var(--text-d2);text-decoration:none;font-size:.92rem;margin-left:24px;font-weight:500}
+  .nav .btn{padding:10px 16px;font-size:.9rem;box-shadow:none}
+  /* HERO */
+  .hero{background:radial-gradient(1000px 500px at 80% -10%,rgba(255,107,53,.16),transparent 60%),var(--ink);color:var(--text-d);padding:76px 0 64px}
+  .hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
+  .badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mint);background:var(--mint-soft);border:1px solid rgba(91,227,176,.25);padding:6px 12px;border-radius:999px;margin-bottom:20px}
+  .hero .lede{font-size:1.18rem;color:var(--text-d2);margin:20px 0 28px;max-width:56ch}
+  .hero .cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .hero .fine{margin-top:18px;font-size:.9rem;color:var(--text-d2);display:flex;flex-wrap:wrap;gap:16px}
+  .hero .fine span::before{content:"✓";color:var(--mint);margin-right:8px;font-weight:700}
+  /* static example */
+  .ex{background:#0E1626;border:1px solid var(--line-d);border-radius:14px;box-shadow:0 40px 80px -40px rgba(0,0,0,.8);overflow:hidden}
+  .ex .bar{padding:11px 16px;border-bottom:1px solid var(--line-d);font-family:var(--mono);font-size:.72rem;color:var(--text-3);display:flex;justify-content:space-between}
+  .ex .q{padding:16px 18px 4px;color:#fff;font-size:1rem}
+  .ex .q em{font-style:normal;color:var(--text-3);margin-right:6px}
+  .ex ol{margin:0;padding:6px 18px 8px 40px;color:var(--text-d)}
+  .ex li{padding:7px 0;border-bottom:1px dashed rgba(255,255,255,.07);font-size:.96rem;display:flex;justify-content:space-between;gap:12px}
+  .ex li:last-child{border:0}
+  .ex li span.c{font-family:var(--mono);font-size:.7rem;color:var(--text-3)}
+  .ex li.you{color:var(--text-3)}
+  .ex li.you .tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;background:rgba(255,107,53,.15);color:var(--accent);border:1px solid rgba(255,107,53,.35);padding:3px 8px;border-radius:5px}
+  .ex .src{padding:12px 18px 16px;border-top:1px solid var(--line-d);font-size:.84rem;color:var(--text-d2)}
+  .ex .src b{color:#fff}
+  .ex .lab{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);padding:0 18px 12px}
+  /* sections */
+  section{padding:80px 0}
+  .sub{font-size:1.1rem;color:var(--text-2);max-width:60ch;margin-top:14px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-top:36px}
+  .checks{margin:0;padding:0;list-style:none}
+  .checks li{padding:12px 0;border-top:1px solid var(--line);display:flex;gap:12px;font-size:1rem}
+  .checks li:last-child{border-bottom:1px solid var(--line)}
+  .checks li b{display:block;font-weight:700}
+  .checks li span{color:var(--text-2);font-size:.95rem}
+  .checks li::before{content:"";flex:none;width:22px;height:22px;border-radius:50%;background-color:var(--accent);margin-top:3px;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E") center/16px no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E") center/16px no-repeat}
+  .pdf{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 30px 60px -40px rgba(15,23,42,.5);padding:24px 26px;font-size:.85rem}
+  .pdf .ph{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.66rem;color:var(--text-3);border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:12px}
+  .pdf .ill{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;background:var(--paper-2);color:var(--text-2);padding:3px 8px;border-radius:5px;margin-bottom:10px}
+  .pdf h4{font-family:var(--disp);font-size:1.1rem;margin:0 0 4px}
+  .pdf .meta{font-size:.8rem;color:var(--text-2);margin-bottom:12px}
+  .pdf table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  .pdf th{text-align:left;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);padding:6px;border-bottom:1px solid var(--line)}
+  .pdf td{padding:8px 6px;border-bottom:1px solid var(--paper-2);vertical-align:top}
+  .pdf td.miss{color:var(--accent);font-weight:700}
+  .pdf .fix{margin-top:12px;background:var(--accent-soft);border-radius:8px;padding:12px 14px;font-size:.84rem}
+  .pdf .fix b{color:#9A3E14}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px}
+  .step{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px}
+  .step .k{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--accent);margin-bottom:10px}
+  .step p{font-size:.96rem;color:var(--text-2);margin:8px 0 0}
+  /* founder + guarantee */
+  .fg{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;margin-top:36px;align-items:stretch}
+  .founder{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;display:grid;grid-template-columns:96px 1fr;gap:22px}
+  .founder .av{width:96px;height:96px;border-radius:12px;background:var(--paper-2);border:1px solid var(--line);object-fit:cover;display:block}
+  .founder h3{margin-bottom:6px}
+  .founder p{font-size:.97rem;color:var(--text-2);margin-bottom:10px}
+  .founder .links{font-size:.9rem}
+  .founder .links a{color:var(--text);font-weight:600;text-decoration:underline;text-underline-offset:3px;margin-right:16px}
+  .guar{background:var(--ink);color:var(--text-d);border-radius:16px;padding:28px}
+  .guar .eyebrow{color:var(--mint)}
+  .guar h3{color:#fff}
+  .guar p{color:var(--text-d2);font-size:.97rem}
+  /* offer */
+  .offer{background:var(--ink);color:var(--text-d)}
+  .offer .box{background:#0E1626;border:1px solid var(--accent);border-radius:18px;padding:36px;display:grid;grid-template-columns:1.1fr .9fr;gap:36px;margin-top:36px;box-shadow:0 30px 60px -40px rgba(255,107,53,.6)}
+  .offer .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mint)}
+  .offer h3{font-size:1.6rem;color:#fff;margin:8px 0 6px}
+  .offer .p{font-family:var(--disp);font-size:3rem;font-weight:800;color:#fff;margin:6px 0 10px;letter-spacing:-.03em}
+  .offer .p small{font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--text-3);margin-left:8px;letter-spacing:0}
+  .offer ul{margin:0 0 6px;padding:0;list-style:none}
+  .offer li{padding:9px 0;border-top:1px solid rgba(255,255,255,.07);font-size:.96rem;color:var(--text-d2);display:flex;gap:10px}
+  .offer li::before{content:"✓";color:var(--mint);font-weight:700}
+  .offer .side{display:flex;flex-direction:column;justify-content:center;gap:14px}
+  .offer .side .btn{width:100%}
+  .offer .side .g{font-size:.86rem;color:var(--text-3);text-align:center}
+  .offer .side .why{background:rgba(255,255,255,.04);border:1px solid var(--line-d);border-radius:10px;padding:14px 16px;font-size:.9rem;color:var(--text-d2)}
+  .offer .side .why b{color:#fff;display:block;margin-bottom:4px}
+  /* faq */
+  .faq{margin-top:28px;border-top:1px solid var(--line)}
+  details{border-bottom:1px solid var(--line)}
+  summary{cursor:pointer;list-style:none;padding:18px 0;font-weight:700;font-size:1.02rem;display:flex;justify-content:space-between;align-items:center}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font-family:var(--mono);color:var(--accent);font-size:1.3rem}
+  details[open] summary::after{content:"–"}
+  details p{padding:0 0 18px;color:var(--text-2);max-width:70ch}
+  .final{background:var(--ink);color:#fff;text-align:center;padding:88px 0}
+  .final p{margin:14px auto 28px;color:var(--text-d2);font-size:1.1rem}
+  footer{padding:32px 0 52px;color:var(--text-3);font-size:.85rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--text-2);text-decoration:none;margin-right:16px}
+  @media (max-width:860px){
+    .hero .wrap,.grid2,.fg,.offer .box,.founder{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr}
+    .nav nav{display:none}
+    section{padding:60px 0}
   }
-  .btn:hover { filter:brightness(1.06); }
-  .note { display:block; margin-top:12px; color:var(--muted); font-size:.88rem; }
-  section { margin:56px 0; }
-  .card { background:var(--ink-2); border:1px solid var(--line); border-radius:14px; padding:22px 24px; }
-  ul { margin:8px 0 0; padding-left:1.15em; }
-  li { margin:8px 0; }
-  .sample-label {
-    font-family:"JetBrains Mono",ui-monospace,monospace; font-size:.7rem; letter-spacing:.14em;
-    text-transform:uppercase; color:var(--accent); margin:0 0 10px;
-  }
-  table { width:100%; border-collapse:collapse; font-size:.92rem; }
-  th, td { text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
-  th { color:var(--muted); font-weight:700; font-size:.78rem; text-transform:uppercase; letter-spacing:.06em; }
-  .steps { display:grid; gap:14px; }
-  .steps article { background:var(--ink-2); border:1px solid var(--line); border-radius:14px; padding:18px 20px; }
-  .steps strong { display:block; color:var(--white); margin-bottom:4px; }
-  footer { margin-top:72px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:.9rem; }
-  footer a { color:var(--mint); }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <nav>
-    <a class="brand" href="/">CalvinsonIT</a>
-    <div class="links">
-      <a href="/local.html">Local</a>
-      <a href="/terms.html">Terms</a>
-    </div>
-  </nav>
 
-  <div class="k">Founding offer · $299</div>
-  <h1>Find out who ChatGPT recommends instead of you.</h1>
-  <p class="lede">A one-time file for one website and one product category. We ask the buying questions, record who gets named, and send you the PDF plus the raw sheet — reviewed by the founder.</p>
-  <p class="process">Pay. Answer three questions at checkout. Get the file.</p>
-  <a class="btn" href="{{STRIPE_AIVIS}}">Get the $299 founding audit</a>
-  <span class="note">USD · Stripe checkout · delivered from hello@calvinsonit.org</span>
-
-  <section>
-    <h2>What you get</h2>
-    <div class="card">
-      <ul>
-        <li>One PDF and the raw sheet. Not a retainer. Not a call.</li>
-        <li>Your website, category, and the questions asked — quoted and dated.</li>
-        <li>Which engines we opened, and which stayed UNKNOWN.</li>
-        <li>Who they recommended instead of you, and the first gap worth fixing.</li>
-        <li>One dated screenshot per opened engine.</li>
-        <li>Founder review and signature. Five business days from confirmed questions.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section>
-    <h2>Illustrative sample</h2>
-    <div class="card">
-      <p class="sample-label">Illustrative — not a real audit</p>
-      <table>
-        <thead>
-          <tr>
-            <th>Intake</th>
-            <th>Opened</th>
-            <th>Named instead</th>
-            <th>Gap</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>example-analytics.test · B2B product analytics · “best product analytics for a 20-person SaaS”</td>
-            <td>ChatGPT</td>
-            <td>Two category incumbents; example-analytics.test not cited</td>
-            <td>No dated, quotable comparison page the engine can use</td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="note" style="margin-top:14px">This row is illustrative. Your file uses your website, your category, and your questions.</p>
-    </div>
-  </section>
-
-  <section>
-    <h2>How it works</h2>
-    <div class="steps">
-      <article>
-        <strong>1. Pay</strong>
-        $299 founding price, once. Stripe sends the receipt.
-      </article>
-      <article>
-        <strong>2. Answer three questions at checkout</strong>
-        Website. Product category. Buying questions. Leave the questions blank and we propose ten; you reply yes or edit.
-      </article>
-      <article>
-        <strong>3. Get the file</strong>
-        Confirmation from hello@calvinsonit.org within one business day. The five-day clock starts when questions are confirmed. PDF and sheet by the end of business day five.
-      </article>
-    </div>
-    <p style="margin-top:28px">
-      <a class="btn" href="{{STRIPE_AIVIS}}">Get the $299 founding audit</a>
-    </p>
-  </section>
-
-  <section>
-    <h2>Who this is for</h2>
-    <p class="lede" style="margin:0">SaaS and product teams that already have a live site and want a measured snapshot of who answer engines name — not a workshop and not a monthly monitor.</p>
-  </section>
-
-  <section>
-    <h2>Refunds</h2>
-    <p class="lede" style="margin:0">If the file has no actionable page, email hello@calvinsonit.org within 14 days of delivery for a full refund to the original payment method. Full terms are on <a href="/terms.html">/terms.html</a>.</p>
-  </section>
-
-  <footer>
-    CalvinsonIT · <a href="mailto:hello@calvinsonit.org">hello@calvinsonit.org</a><br>
-    <a href="/local.html">Jacksonville GBP Category Audit</a> · <a href="/terms.html">Terms</a>
-  </footer>
+<div class="nav">
+  <div class="wrap">
+    <a class="brand" href="/"><i></i>CalvinsonIT</a>
+    <nav><a href="#get">What you get</a><a href="#how">Process</a><a href="#founder">Method</a><a href="#faq">FAQ</a></nav>
+    <a class="btn" href="#offer">Buy the founding audit</a>
+  </div>
 </div>
+
+<!-- 1. Outcome + CTA -->
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="badge">Founding offer · new in September 2026</div>
+      <h1>Find out who ChatGPT recommends <span class="mark">instead of you.</span></h1>
+      <p class="lede">We run ten of your real buying questions through ChatGPT, Perplexity, Gemini and Google AI, record who gets named, trace every citation to the page it came from, and hand you the first page to fix. One PDF. Five business days. No call.</p>
+      <div class="cta">
+        <a class="btn" href="#offer">Buy the founding audit — $299</a>
+        <a class="btn ghost" href="#get">See what you get</a>
+      </div>
+      <div class="fine"><span>Reviewed and signed by the founder</span><span>Full refund if we find nothing to fix</span></div>
+    </div>
+    <!-- 2. One static example -->
+    <div class="ex" aria-label="Example of an AI answer where a brand is missing">
+      <div class="bar"><span>ChatGPT · illustrative example</span><span>run 1 of 6</span></div>
+      <div class="q"><em>›</em>“best client portal for small accounting firms”</div>
+      <ol>
+        <li><span>TaxDome</span><span class="c">cited 4×</span></li>
+        <li><span>Canopy</span><span class="c">cited 3×</span></li>
+        <li><span>Karbon</span><span class="c">cited 2×</span></li>
+        <li><span>SmartVault</span><span class="c">cited 2×</span></li>
+        <li class="you"><span>Your product</span><span class="tag">NOT CITED</span></li>
+      </ol>
+      <div class="src">Named because of <b>2 editorial roundups and one G2 category page</b> the model reads. If you're not on those pages, you're not in the answer.</div>
+      <div class="lab">Illustrative. Brands shown are real products in this category; the run is a demonstration, not a client result.</div>
+    </div>
+  </div>
+</header>
+
+<!-- 3. Exactly what the buyer receives -->
+<section id="get">
+  <div class="wrap">
+    <div class="eyebrow">Exactly what you receive</div>
+    <h2>A one-page PDF and the raw sheet behind it.</h2>
+    <div class="grid2">
+      <ul class="checks">
+        <li><div><b>Ten buying questions, four engines</b><span>Yours if you have them, ours if you don't. Each run on ChatGPT, Perplexity, Gemini and Google AI Overviews, repeated across three days.</span></div></li>
+        <li><div><b>Who got named, and whether you did</b><span>Every brand recommended per question, with how many runs named it out of how many.</span></div></li>
+        <li><div><b>Every cited page, with your gaps marked</b><span>The exact URLs the engines pulled from. Where you're absent is highlighted.</span></div></li>
+        <li><div><b>The first page to fix, and why</b><span>One recommendation, ranked by how often it's cited and how reachable the editor is. Contact path included.</span></div></li>
+        <li><div><b>The raw sheet</b><span>Every query, every run, every citation. Your team can keep going without us.</span></div></li>
+      </ul>
+      <div class="pdf" aria-label="Sample audit page">
+        <div class="ph"><span>CALVINSONIT · AI ANSWER VISIBILITY AUDIT</span><span>PAGE 1</span></div>
+        <div class="ill">Illustrative sample · replaced by a real client audit, with permission</div>
+        <h4>Q3 · “best client portal for small accounting firms”</h4>
+        <div class="meta">Perplexity + ChatGPT · 6 runs over 3 days · you were named in 0 of 6</div>
+        <table>
+          <thead><tr><th>Cited page</th><th>Cited</th><th>You</th><th>Contact</th></tr></thead>
+          <tbody>
+            <tr><td>accountingtoday.com/…/client-portals-2026</td><td>7</td><td class="miss">Absent</td><td>Editor, bylined</td></tr>
+            <tr><td>g2.com/categories/client-portal</td><td>5</td><td>Listed, 2 reviews</td><td>Self-serve</td></tr>
+            <tr><td>cpapracticeadvisor.com/…/portal-roundup</td><td>4</td><td class="miss">Absent</td><td>Content lead</td></tr>
+            <tr><td>reddit.com/r/Accounting/…/portal_thread</td><td>3</td><td class="miss">Absent</td><td>Skip (UGC)</td></tr>
+            <tr><td>yourdomain.com/features</td><td>1</td><td>Own site</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <div class="fix"><b>First fix:</b> the Accounting Today roundup. Cited in 7 of 10 runs, editorial, one named editor.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Five-day process -->
+<section id="how" style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="eyebrow">The five-day process</div>
+    <h2>Pay. Answer three questions at checkout. Get the file.</h2>
+    <div class="steps">
+      <div class="step"><div class="k">DAY 0</div><h3>Checkout, three questions</h3><p>Stripe checkout asks for your website, your category, and up to ten buying questions. Leave the questions blank and we'll propose ten and email them for a yes before we run.</p></div>
+      <div class="step"><div class="k">DAYS 1 TO 4</div><h3>We run it, then the founder reads it</h3><p>Live queries on four engines across three days. Every citation traced to its page. Then a human reads every row before it's called done.</p></div>
+      <div class="step"><div class="k">DAY 5</div><h3>PDF and sheet in your inbox</h3><p>Sent from hello@calvinsonit.org by the end of the fifth business day. No call on delivery, no upsell. Questions by email, answered within one business day.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Founder review and guarantee -->
+<section id="founder">
+  <div class="wrap">
+    <div class="eyebrow">How it's done, and who checks it</div>
+    <h2>Every audit is human-reviewed before it's sent.</h2>
+    <div class="fg">
+      <div class="founder" style="grid-template-columns:1fr">
+        <div>
+          <h3>The method, in the open</h3>
+          <p>Each buying question is run on ChatGPT, Perplexity, Gemini and Google AI Overviews at least twice, on three different days, so a single lucky answer never counts. Every brand the engines name is recorded with a run count. Every source they cite is opened and checked for your presence. Nothing in the file is inferred: if we couldn't verify it, it's labeled unknown, not guessed.</p>
+          <p>Software does the querying, tracing and enrichment. Jay, the founder, reads every row, makes the judgment calls, writes the first-fix recommendation, and signs the audit. If it isn't good enough to send under his name, it doesn't go.</p>
+          <div class="links"><a href="mailto:hello@calvinsonit.org">hello@calvinsonit.org</a><a href="/terms.html">Delivery &amp; refund terms</a></div>
+        </div>
+      </div>
+      <div class="guar">
+        <div class="eyebrow">The guarantee</div>
+        <h3>If the audit doesn't name at least one page you can act on, you get all of it back.</h3>
+        <p>You'll still get the file, with the receipts showing you're already cited. Refunds are issued to the original payment method within five business days of request. <a href="/terms.html" style="color:var(--mint)">Terms</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Offer block -->
+<section id="offer" class="offer">
+  <div class="wrap">
+    <div class="eyebrow">Founding offer</div>
+    <h2 style="color:#fff">The first audits, at the first price.</h2>
+    <p class="sub" style="color:var(--text-d2)">This is a new offer, launched in September 2026. Founding buyers get the full audit at $299, a direct line to the founder, and the option to be an early published case study if they choose. Price rises when the founding slots are gone.</p>
+    <div class="box">
+      <div>
+        <div class="tag">AI Answer Visibility Audit</div>
+        <h3>For SaaS and B2B software teams</h3>
+        <div class="p">$299<small>one-time · founding price</small></div>
+        <ul>
+          <li>10 buying questions · ChatGPT, Perplexity, Gemini, Google AI</li>
+          <li>Every brand named, every run counted</li>
+          <li>Every cited page, your gaps marked</li>
+          <li>First page to fix, with contact path and why</li>
+          <li>Founder-reviewed PDF plus raw sheet, in 5 business days</li>
+        </ul>
+      </div>
+      <div class="side">
+        <a class="btn" href="{{STRIPE_AIVIS}}" data-stripe="aivis">Buy the founding audit — $299</a>
+        <div class="g">Secure checkout by Stripe. Full refund if we find nothing to fix.</div>
+        <div class="why"><b>Why “founding”?</b>Because we're new and would rather say so. Your audit gets more of the founder's time than a later one will, and your feedback shapes the next hundred.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Short FAQ + final CTA -->
+<section id="faq">
+  <div class="wrap">
+    <div class="eyebrow">Before you pay</div>
+    <h2>Four questions people ask.</h2>
+    <div class="faq">
+      <details><summary>Why no call?</summary><p>Calls are where audits turn into retainers. The audit is the product. Everything you'd ask on a call is on this page, and anything else is one email away.</p></details>
+      <details><summary>Is this SEO?</summary><p>Same idea, different target. SEO gets you into Google's index. This gets you onto the specific third-party pages the answer engines cite. The tactics overlap; the list of pages doesn't, and the list is what you're buying.</p></details>
+      <details><summary>What if I'm already cited everywhere?</summary><p>Then the audit says so, with the receipts, and you get a full refund. That's the guarantee, in writing, in the terms.</p></details>
+      <details><summary>Do you do the outreach?</summary><p>Not inside the audit. You get the list and the first move. If you want it done for you afterward, email and ask. No pressure from our side either way.</p></details>
+    </div>
+  </div>
+</section>
+
+<div class="final">
+  <div class="wrap">
+    <h2>Find out in five days.</h2>
+    <p>Ten questions, four engines, three days of runs, one human reading every row. $299, refunded in full if there's nothing to fix.</p>
+    <a class="btn" href="{{STRIPE_AIVIS}}" data-stripe="aivis">Buy the founding audit — $299</a>
+  </div>
+</div>
+
+<footer class="wrap">
+  <div>© 2026 CalvinsonIT · Jacksonville, FL · <a href="mailto:hello@calvinsonit.org">hello@calvinsonit.org</a></div>
+  <div><a href="/terms.html">Terms &amp; refunds</a><a href="/local.html">Local business audit</a></div>
+</footer>
 </body>
 </html>
