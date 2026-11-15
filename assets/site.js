@@ -44,24 +44,6 @@
   if(!reduce)timer=setInterval(function(){if(!paused)show((cur+1)%jobs.length)},6000);
 
   }
-  // chat chips
-  if(document.getElementById('intake')){
-  var me=document.getElementById('me-msg'),botMsg=document.getElementById('bot-msg'),form=document.getElementById('intake');
-  function pick(b){
-    document.querySelectorAll('#quick button').forEach(function(x){x.setAttribute('aria-pressed','false')});
-    b.setAttribute('aria-pressed','true');me.textContent=b.textContent;
-    botMsg.textContent=b.dataset.r+' ';
-    if(b.dataset.link){var a=document.createElement('a');a.href=b.dataset.link;a.textContent=b.dataset.label;a.style.color='var(--accent-text)';a.style.fontWeight='600';botMsg.appendChild(a);}
-    form.hidden=!b.dataset.form;
-  }
-  document.querySelectorAll('#quick button').forEach(function(b){b.addEventListener('click',function(){pick(b)})});
-  document.querySelectorAll('[data-svc]').forEach(function(a){a.addEventListener('click',function(){var b=document.getElementById(a.dataset.svc);if(b)pick(b);})});
-  form.addEventListener('submit',function(e){e.preventDefault();document.getElementById('sent').hidden=false;});
-  }
   // quiz preview options
   document.querySelectorAll('#quiz-opts .opt').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#quiz-opts .opt').forEach(function(x){x.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');});});
-  // chat switch: while chat is off, quote buttons go to the contact block instead
-  if(document.body.getAttribute('data-chat')==='off'){
-    document.querySelectorAll('[data-svc]').forEach(function(a){a.setAttribute('href','/#contact');});
-  }
 })();

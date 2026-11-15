@@ -1,0 +1,17 @@
+/* Local draft pages only. Existing site CSS remains unchanged. */
+body{margin:0}.legal-hero{padding:56px 0 40px;background:var(--band);color:var(--band-fg)}
+.legal-hero h1{font-size:clamp(2rem,6vw,3.5rem);line-height:1.12;margin:14px 0 20px}
+.legal-hero p{max-width:66ch;color:var(--band-muted)}.legal-width{max-width:820px}
+.draft-badge{display:inline-block;padding:6px 12px;border:1px solid var(--teal);color:var(--teal);font-family:var(--f-mono);font-size:.8rem;letter-spacing:.06em}
+.legal-main{padding:40px 0 64px}.legal-toc{padding:24px;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:40px}
+.legal-toc h2{font-size:1.25rem}.legal-toc ol{margin-bottom:0;padding-left:24px}.legal-toc a{color:var(--accent-text);text-underline-offset:4px;display:inline-block;padding:5px 0}
+.legal-section{border-top:1px solid var(--line);padding-top:28px;margin-top:36px}.legal-section h2{font-size:1.5rem;line-height:1.25;margin-bottom:20px}.legal-section p{margin:16px 0;overflow-wrap:anywhere}
+.open-question{padding:18px 20px;background:var(--surface);border-left:4px solid var(--accent-text);border-radius:0 8px 8px 0}.open-question strong{display:block;color:var(--accent-text);font-family:var(--f-mono);font-size:.8rem;letter-spacing:.04em;margin-bottom:6px}
+.legal-footer{background:var(--band);color:var(--band-fg);padding:32px 0}.legal-footer address{font-style:normal}.legal-footer p{margin-top:12px;color:var(--band-muted)}
+.legal-logo{display:block;width:180px;max-width:50vw;height:auto}.legal-home{color:var(--band-fg);text-underline-offset:5px;min-height:44px;display:flex;align-items:center;white-space:nowrap}
+.skip{position:fixed;left:16px;top:-80px;background:var(--surface);color:var(--fg);padding:12px;z-index:100}.skip:focus{top:16px}
+@media(max-width:480px){.legal-hero{padding:36px 0 32px}.legal-main{padding-top:24px}.legal-toc{padding:20px}.open-question{padding:16px}.legal-section h2{font-size:1.35rem}header.site .wrap{gap:12px}.legal-home{font-size:.875rem}.legal-logo{width:150px}}
+@media print{header.site,.legal-toc,.skip{display:none}.legal-hero,.legal-footer{background:white;color:black}.legal-hero p,.legal-footer p{color:#333}.draft-badge{color:black;border-color:black}.open-question{break-inside:avoid}body{background:white;color:black}}
+
+/* Keep section targets visible below the existing sticky header. */
+.legal-main,.legal-section{scroll-margin-top:96px}
