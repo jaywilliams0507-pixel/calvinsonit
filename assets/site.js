@@ -44,6 +44,4 @@
   if(!reduce)timer=setInterval(function(){if(!paused)show((cur+1)%jobs.length)},6000);
 
   }
-  // quiz preview options
-  document.querySelectorAll('#quiz-opts .opt').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#quiz-opts .opt').forEach(function(x){x.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');});});
 })();
