@@ -22,10 +22,10 @@
 
   // job console
   var jobs=[
-    {t:"AI Answer Visibility Audit",s:"sample client: family HVAC company",r:"Report emailed to the owner",l:["Asked ChatGPT 25 questions customers really ask","Ran the same questions in Google AI","Found 9 answers that name competitors, not you","Ranked the fixes by impact"]},
-    {t:"Google Business Profile Optimization",s:"sample client: dental practice",r:"Profile updated and verified",l:["Checked primary and secondary categories","Filled in every service and the service area","Matched hours and contact info everywhere","Listed the next 4 updates to post"]},
+    {t:"AI Answer Visibility Audit",s:"sample client: family HVAC company",r:"Report emailed to the owner",l:["Asked 20 customer questions on each of five engines","Checked ChatGPT, Google AI Overviews, Gemini, Perplexity and Copilot","Recorded all 100 results and the businesses named","Ranked the fixes by impact"]},
+    {t:"Google Business Profile Optimization",s:"illustrative example: service not accepting orders",r:"Profile updated and verified",l:["Checked primary and secondary categories","Filled in every service and the service area","Matched hours and contact info everywhere","Listed the next 4 updates to post"]},
     {t:"Shopify Catalog & Feed Cleanup",s:"sample client: auto parts reseller · 1,847 parts",r:"Import file live in Shopify",l:["Merged 3 supplier spreadsheets","Removed 212 duplicate parts","Flagged 96 parts with missing prices","Matched titles to one clean format"]},
-    {t:"Business Automation",s:"sample client: home cleaning service",r:"Runs on its own every day",l:["Connected the website form","New leads logged in one sheet","Replies sent in the owner's voice","Weekly summary sent to the owner"]}
+    {t:"Business Automation",s:"illustrative example: service not accepting orders",r:"Runs on its own every day",l:["Connected the website form","New leads logged in one sheet","Replies sent in the owner's voice","Weekly summary sent to the owner"]}
   ];
   var tabs=[].slice.call(document.querySelectorAll('.tab')),list=document.getElementById('job-steps'),cur=0,timer=null;
   if(list){

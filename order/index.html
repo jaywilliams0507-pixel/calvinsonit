@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Order confirmation | CalvinsonIT</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Geist:wght@400..700&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/app.css">
+<script type="module" src="/assets/app.js"></script>
+</head>
+<body data-page="order">
+<a class="skip" href="#main">Skip to content</a>
+<div class="staging-notice" role="note">Protected staging preview · Test payments only · No real charges</div>
+<header class="site app-header"><div class="wrap"><a href="/" aria-label="CalvinsonIT home"><img src="/assets/logo/calvinsonit-logo-dark.svg" alt="CalvinsonIT" width="180" height="45"></a><nav aria-label="Main navigation"><a href="/#services">Services</a><a href="/contact/">Contact</a></nav></div></header>
+<main id="main" class="app-main wrap">
+
+<div class="app-intro"><p class="eyebrow">Your test order</p><h1>Order confirmation</h1><p>Your order status updates after Stripe confirms the test payment.</p></div>
+<p id="page-message" class="app-message" role="status" aria-live="polite">Loading order…</p>
+
+<section id="auth-panel" class="app-card" aria-labelledby="auth-heading" hidden>
+  <h2 id="auth-heading">Sign in to continue</h2>
+  <p>Use your admitted staging test account with an email sign-in link or Google.</p>
+  <form id="sign-in-form" class="app-form">
+    <label for="sign-in-email">Email address</label>
+    <input id="sign-in-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+    <button class="btn btn-teal" type="submit">Email a sign-in link</button>
+  </form>
+  <p class="form-help">Open the email link in this browser to continue your intake.</p>
+  <button id="google-sign-in" class="btn app-secondary" type="button">Continue with Google</button>
+  <p id="auth-message" class="app-message" role="status" aria-live="polite"></p>
+</section>
+<div id="signed-in" class="signed-in" hidden><span>Signed in as <strong id="signed-in-email"></strong></span><button id="sign-out" type="button" class="text-button">Sign out</button></div>
+
+<section id="order-panel" class="app-card" aria-labelledby="order-heading" hidden>
+  <h2 id="order-heading">Order details</h2>
+  <dl class="order-details">
+    <div><dt>Order ID</dt><dd id="order-id" class="order-id"></dd></div>
+    <div><dt>Service</dt><dd id="order-service"></dd></div>
+    <div><dt>Fixed price</dt><dd id="order-price"></dd></div>
+    <div><dt>Status</dt><dd id="order-status"></dd></div>
+    <div id="due-row" hidden><dt>Audit delivery date</dt><dd id="order-due"></dd></div>
+  </dl>
+  <p id="order-explanation" class="service-summary"></p>
+  <p id="order-hosted-note" class="form-note" hidden>Hosted Feed Build is test-only while final hosting terms await approval.</p>
+  <section id="order-files-panel" hidden aria-labelledby="order-files-heading"><h3 id="order-files-heading">Your intake files</h3><ul id="order-files" class="file-list"></ul></section>
+  <section id="draft-panel" hidden aria-labelledby="draft-heading">
+    <h3 id="draft-heading">Complete your file intake</h3>
+    <p id="pending-files-note" class="form-note" hidden></p>
+    <form id="upload-form" class="app-form">
+      <label for="order-file-input">Add supplier files</label>
+      <input id="order-file-input" type="file" accept=".csv,.xlsx" required>
+      <p id="order-file-help" class="form-help"></p>
+      <button class="btn app-secondary" type="submit">Upload files</button>
+    </form>
+    <button id="complete-intake" class="btn btn-teal" type="button">Finish intake</button>
+  </section>
+  <div class="app-actions"><button id="checkout" class="btn btn-teal" type="button" hidden>Continue to Stripe test checkout</button><button id="refresh-order" class="btn app-secondary" type="button">Refresh status</button></div>
+  <p id="order-message" class="app-message" role="status" aria-live="polite"></p>
+</section>
+<noscript><p class="form-note">JavaScript is needed for managed sign-in and your order confirmation.</p></noscript>
+
+</main>
+<footer class="app-footer"><div class="wrap"><p>CalvinsonIT · Fixed-price tech services across the United States.</p><p><a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a> · <a href="/contact/">Contact</a></p></div></footer>
+</body>
+</html>

@@ -14,8 +14,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/app.css">
 </head>
 <body data-chat="off">
+<div class="staging-notice" role="note">Protected staging preview · Test payments only · No real charges</div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <linearGradient id="gHead" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#17467F"/><stop offset="1" stop-color="#0B2545"/></linearGradient>
@@ -52,7 +54,7 @@
   <div class="wrap">
     <a class="lockup" href="/" aria-label="CalvinsonIT home"><svg viewBox="0 12 403 76" role="img" aria-label="CalvinsonIT"><use href="#wordmark" width="403" height="100"/></svg></a>
     <nav class="primary" aria-label="Main">
-      <span class="links"><a href="#about">About</a><a href="#services">Services</a><a href="#how">How it works</a><a href="mailto:hello@calvinsonit.org">Email us</a></span>
+      <span class="links"><a href="#about">About</a><a href="#services">Services</a><a href="#how">How it works</a><a href="/contact/">Contact us</a></span>
       <a class="btn btn-teal" href="#services">Start a project</a>
     </nav>
   </div>
@@ -67,10 +69,10 @@
       <div class="hero-copy">
         <div class="eyebrow">Tech services for small business</div>
         <h1>You run the business. <span class="onit grad-text">Calvin's on IT.</span></h1>
-        <p class="lede"><b>We take the tech jobs off your plate:</b> showing up in AI answers, a complete Google profile, a clean product catalog, and the busywork that eats your week.</p>
+        <p class="lede"><b>We take the tech jobs off your plate:</b> understand your visibility in AI answers and turn supplier spreadsheets into a clean product catalog.</p>
         <div class="ctas">
           <a class="btn btn-teal" href="#services">Explore services <svg aria-hidden="true"><use href="#arrow"/></svg></a>
-          <a class="btn btn-ghost" href="mailto:hello@calvinsonit.org">Tell us what's broken</a>
+          <a class="btn btn-ghost" href="/contact/">Contact CalvinsonIT</a>
         </div>
       </div>
 
@@ -129,9 +131,9 @@
       <div class="brand-copy reveal">
         <div class="eyebrow">Who we are</div>
         <p class="statement">The C is for Calvin. The check is our promise to you: <em>we don't hand anything over until it's finished.</em></p>
-        <p class="body">We're a small tech shop that works with small businesses. Send us the job that's been sitting on your list for months.</p>
+        <p class="body">We're a small tech shop serving businesses across the United States. Choose the fixed-price service that fits your job.</p>
         <div class="pillars">
-          <div class="pillar"><svg aria-hidden="true"><use href="#tick"/></svg><b>One price, agreed first</b><span>You'll know the cost before any work starts.</span></div>
+          <div class="pillar"><svg aria-hidden="true"><use href="#tick"/></svg><b>One listed, fixed price</b><span>You'll know the cost before any work starts.</span></div>
           <div class="pillar"><svg aria-hidden="true"><use href="#tick"/></svg><b>Real data behind it</b><span>We show you the searches and sources, so you can check our work.</span></div>
           <div class="pillar"><svg aria-hidden="true"><use href="#tick"/></svg><b>Yours to keep</b><span>Reports, files and guides stay with you.</span></div>
         </div>
@@ -146,7 +148,7 @@
           <div class="eyebrow">Services</div>
           <h2>Pick the job you need done.</h2>
         </div>
-        <p>Each service has its own page with the price, what you'll get, and what we'll need from you.</p>
+        <p>Each available service has a listed fixed price, a clear scope and a short intake form.</p>
       </div>
       <div class="services">
         <a class="svc reveal" href="/ai-visibility-audit/">
@@ -154,7 +156,7 @@
           <div class="svc-main">
             <div class="svc-text">
               <h3>AI Answer Visibility Audit</h3>
-              <p class="lead">More customers now ask ChatGPT who to call. See what it says about you and what to fix.</p>
+              <p class="lead">20 questions on each of five AI engines. See where your business appears across 100 checks and what to fix.</p>
             </div>
             <div class="viz" aria-hidden="true">
               <div class="ai-q">Who's the best AC repair near me?</div>
@@ -213,14 +215,14 @@
           <h3 id="job-title">AI Answer Visibility Audit</h3>
           <div class="sub" id="job-sub">sample client: family HVAC company</div>
           <ul class="steps" id="job-steps">
-            <li><svg aria-hidden="true"><use href="#tick"/></svg><span>Asked ChatGPT 25 questions customers really ask</span><span class="t">done</span></li>
-            <li><svg aria-hidden="true"><use href="#tick"/></svg><span>Ran the same questions in Google AI</span><span class="t">done</span></li>
-            <li><svg aria-hidden="true"><use href="#tick"/></svg><span>Found 9 answers that name competitors, not you</span><span class="t">done</span></li>
+            <li><svg aria-hidden="true"><use href="#tick"/></svg><span>Asked 20 customer questions on each of five engines</span><span class="t">done</span></li>
+            <li><svg aria-hidden="true"><use href="#tick"/></svg><span>Checked ChatGPT, Google AI Overviews, Gemini, Perplexity and Copilot</span><span class="t">done</span></li>
+            <li><svg aria-hidden="true"><use href="#tick"/></svg><span>Recorded all 100 results and the businesses named</span><span class="t">done</span></li>
             <li><svg aria-hidden="true"><use href="#tick"/></svg><span>Ranked the fixes by impact</span><span class="t">done</span></li>
           </ul>
           <div class="result"><span id="job-result">Report emailed to the owner</span><span class="t">checked ✓</span></div>
         </div>
-        <div class="console-foot">Sample jobs for illustration. Not real client data.</div>
+        <div class="console-foot">Illustrative examples, not real client data. Google Business Profile and Automation are not accepting orders.</div>
       </div>
     </div>
   </section>
@@ -232,12 +234,12 @@
           <div class="eyebrow">How it works</div>
           <h2>Here's how a job works.</h2>
         </div>
-        <p>Most tech help bills by the hour. We agree on the finished result and the price before we start.</p>
+        <p>Choose a listed package, complete its intake and pay its fixed price.</p>
       </div>
       <ol class="steps4">
-        <li class="reveal"><h3>Tell us what's broken</h3><p>Pick a service, or describe the problem in an email.</p></li>
-        <li class="reveal"><h3>Get the price</h3><p>Listed services have a set price. Custom work gets a written quote first.</p></li>
-        <li class="reveal"><h3>We do the work</h3><p>We'll ask a few questions, then handle the rest. Most jobs need no meetings.</p></li>
+        <li class="reveal"><h3>Choose your service</h3><p>Review the listed price and what the package includes.</p></li>
+        <li class="reveal"><h3>Complete the intake</h3><p>Tell us about your business and provide the files the service needs.</p></li>
+        <li class="reveal"><h3>Pay the fixed price</h3><p>Stripe handles checkout. Work starts after payment and complete intake.</p></li>
         <li class="reveal"><h3>You get it, checked</h3><p>The finished work lands in your inbox.</p></li>
       </ol>
     </div>
@@ -248,11 +250,11 @@
       <div class="closer reveal">
         <div class="glow" style="width:500px;height:500px;right:-100px;top:-200px;background:rgba(19,196,163,.3)"></div>
         <div>
-          <h2>Tell us the problem. <span class="grad-text">We'll tell you the price.</span></h2>
-          <p>Send us an email. We'll get back to you with a clear next step.</p>
+          <h2>Have a question? <span class="grad-text">Contact CalvinsonIT.</span></h2>
+          <p>Ask about a listed service or an existing order. We serve businesses nationwide.</p>
         </div>
         <div class="acts">
-          <a class="btn btn-teal" href="mailto:hello@calvinsonit.org">Email the team <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+          <a class="btn btn-teal" href="/contact/">Send a message <svg aria-hidden="true"><use href="#arrow"/></svg></a>
           <a class="mail" href="mailto:hello@calvinsonit.org">hello@calvinsonit.org</a>
         </div>
         <svg class="bigmark" aria-hidden="true" style="color:#EDF3F9"><use href="#mark"/></svg>
@@ -270,7 +272,7 @@
         <p>Fixed-price tech services for small businesses across the US.</p>
       </div>
       <div><h4>Services</h4><a href="/ai-visibility-audit/">AI Answer Visibility Audit</a><a href="/google-business-profile/">Google Business Profile</a><a href="/catalog-cleanup/">Catalog &amp; Feed Cleanup</a><a href="/automation/">Business Automation</a></div>
-      <div><h4>Company</h4><a href="#about">About</a><a href="#how">How it works</a><a href="mailto:hello@calvinsonit.org">Email us</a></div>
+      <div><h4>Company</h4><a href="#about">About</a><a href="#how">How it works</a><a href="/contact/">Contact us</a></div>
       <div><h4>Contact</h4><address>CalvinsonIT<br>13245 Atlantic Blvd STE 4106<br>Jacksonville, FL 32225</address><a href="mailto:hello@calvinsonit.org" style="display:block;margin-top:10px;color:var(--band-fg);user-select:all">hello@calvinsonit.org</a></div>
     </div>
     <div class="legal"><span>© 2026 CalvinsonIT. All rights reserved.</span><span><a href="/terms.html" style="text-decoration:none">Terms</a> &nbsp;·&nbsp; <a href="/privacy.html" style="text-decoration:none">Privacy</a></span></div>

@@ -1,0 +1,47 @@
+name: Staging checks
+on:
+  push:
+    branches: [codex/phase1-protected-staging]
+  pull_request:
+    branches: [release/legal-buyer-fixes]
+permissions:
+  contents: read
+concurrency:
+  group: staging-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run test:db
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+  deploy:
+    needs: check
+    if: github.event_name == 'push' && github.repository == 'jaywilliams0507-pixel/calvinsonit' && github.ref == 'refs/heads/codex/phase1-protected-staging' && contains(github.event.head_commit.message, '[deploy staging]')
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: node src/deployment.ts
+        env:
+          STAGING_CONFIG_JSON: ${{ secrets.STAGING_CONFIG_JSON }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
