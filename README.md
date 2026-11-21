@@ -1,12 +1,12 @@
 # CalvinsonIT protected staging
 
-Phase 1 adds service intake, private Catalog input files, managed Supabase sign-in, Stripe test Checkout, durable payment confirmation, and transactional alerts to the pending frontend release. The public site remains unchanged until a separately approved production cutover.
+Phase 1 adds service intake, private Catalog input files, managed Supabase sign-in, Stripe test Checkout, durable payment confirmation, transactional alerts, private report delivery, two-way order messages, and an admin order list/detail on the existing frontend release. The public site remains unchanged until a separately approved production cutover.
 
 Builds run in the cloud against this GitHub repository. Keys belong in GitHub environment secrets and scoped runtime secret stores. This project has no Mac dependency.
 
 ## Local cloud verification
 
-Use Node 24 and Docker. Install with `npm ci`, then run:
+Use Node 24 and Docker. Install with `npm ci` (set `NPM_CONFIG_CACHE` to a writable task-owned temporary directory if needed), then run:
 
 ```sh
 npm run check
@@ -34,4 +34,4 @@ The staging workflow performs checks on ordinary pushes. Deployment additionally
 
 ## Deliberate limits
 
-There is one owned order receipt page, not the Phase 2 portal. There is no custom authentication, admin dashboard, marketing subsystem, Telegram integration, live-payment switch, or generic file execution. CSV/XLSX inputs remain untrusted and need operator malware checks before opening. No automatic retention-deletion job is implemented; the stated retention policy needs an operator procedure before production. Hosted Build terms, holiday treatment, and provider/account settings remain production gates.
+The owner order page now includes reports and messages; `/admin/` adds the protected test-order list/detail, intake/files, test payment link and report upload. There is no custom authentication, marketing subsystem, Telegram integration, live-payment switch, or generic file execution. Uploaded files remain untrusted and need operator malware checks before opening. No automatic retention-deletion job is implemented; the stated retention policy needs an operator procedure before production. Hosted remains visible at $1,490 with purchase blocked. GBP and Automation are email-only. Hosted Build terms, holiday treatment, and provider/account settings remain production gates.

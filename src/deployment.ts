@@ -13,6 +13,7 @@ export function prepareStaging(base:StagingConfig,variables:unknown,secrets:Secr
   const vars:Record<string,string>={};
   for(const key of variableNames) {
     const value=Reflect.get(variables,key);
+    if(key==='STRIPE_PRICE_CATALOG_HOSTED' && value===undefined) continue;
     if(typeof value!=='string' || !value || value.includes('REPLACE'))throw new Error(`Missing staging variable ${key}`);
     vars[key]=value;
   }
@@ -23,7 +24,7 @@ export function prepareStaging(base:StagingConfig,variables:unknown,secrets:Secr
   if(!vars.SUPABASE_PUBLISHABLE_KEY!.startsWith('sb_publishable_')) {
     try {if(decodeJwt(vars.SUPABASE_PUBLISHABLE_KEY!).role!=='anon')throw new Error();}catch{throw new Error('Supabase browser key must be public');}
   }
-  for(const key of variableNames.filter(key=>key.startsWith('STRIPE_PRICE_')))if(!/^price_[A-Za-z0-9]+$/.test(vars[key]!))throw new Error('Configure four test price IDs');
+  for(const key of variableNames.filter(key=>key.startsWith('STRIPE_PRICE_') && key!=='STRIPE_PRICE_CATALOG_HOSTED'))if(!/^price_[A-Za-z0-9]+$/.test(vars[key]!))throw new Error('Configure three test price IDs');
   const allowed=vars.STAGING_EMAIL_ALLOWLIST!.split(',').map(value=>value.trim().toLowerCase());
   if(!allowed.length || allowed.some(value=>!/^\S+@[^\s@]+\.[^\s@]+$/.test(value)) || !allowed.includes(vars.ALERT_EMAIL!.toLowerCase()) || /[\r\n]/.test(vars.EMAIL_FROM!))throw new Error('Configure the staging sender and recipient allowlist');
   if(!/^(sk|rk)_test_[A-Za-z0-9]+$/.test(secrets.STRIPE_SECRET_KEY??''))throw new Error('Only a Stripe test key may enter staging');

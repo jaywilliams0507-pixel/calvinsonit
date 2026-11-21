@@ -42,6 +42,7 @@ try {
  alter default privileges in schema public grant all on tables to anon,authenticated;
  `);
  await admin.query(await readFile('supabase/migrations/202611150001_phase1.sql','utf8'));
+ await admin.query(await readFile('supabase/migrations/202611210001_fulfilment.sql','utf8'));
  pass('migration applies to PostgreSQL 17 with Supabase auth/storage contracts');
  const alice='00000000-0000-4000-8000-000000000001',bob='00000000-0000-4000-8000-000000000002',outsider='00000000-0000-4000-8000-000000000003';
  await admin.query('insert into auth.users values($1,$2),($3,$4),($5,$6)',[alice,'alice@example.test',bob,'bob@example.test',outsider,'outsider@example.test']);
@@ -119,6 +120,70 @@ try {
  assert.equal((await db.query('select count(*)::int n from public.leads')).rows[0].n,1);pass('contact retries create one lead and one alert');
  const catalogRows=(await db.query('select id,amount_cents,max_files,max_products from public.service_catalog order by id')).rows;
  assert.deepEqual(catalogRows.map(s=>[s.id,s.amount_cents,s.max_files,s.max_products]),services.map(s=>[s.id,s.amountCents,s.maxFiles,s.maxProducts]).sort((a,b)=>a[0].localeCompare(b[0])));pass('database fixed-price catalog matches approved packages');
+ // Fulfilment uses only fabricated identities in this disposable local PostgreSQL container.
+ await assert.rejects(call('create_order',[alice,crypto.randomUUID(),'catalog-hosted',{...intake,productCount:100,distributorCount:1},'alice@example.test','jay@example.test']));
+ // Model a Hosted order that predates this migration without weakening the live schema.
+ await admin.query('alter table public.orders disable trigger block_hosted_order');
+ const legacy=(await admin.query("insert into public.orders(user_id,request_id,service_id,amount_cents,intake,client_email,status,intake_completed_at) values($1,$2,'catalog-hosted',149000,$3,'alice@example.test','awaiting_payment',now()) returning id",[alice,crypto.randomUUID(),intake])).rows[0];
+ await admin.query('alter table public.orders enable trigger block_hosted_order');
+ await assert.rejects(call('reserve_checkout',[alice,legacy.id]));
+ pass('Hosted new intake and legacy checkout are blocked in the database');
+ await assert.rejects(call('require_staging_admin',[alice]));
+ await assert.rejects(call('admin_orders',[alice,0]));
+ await assert.rejects(call('order_workspace',[bob,a.id,false]));
+ await assert.rejects(call('order_workspace',[bob,a.id,true]));
+ await assert.rejects(call('send_order_message',[bob,a.id,false,crypto.randomUUID(),'Forged owner','jay@example.test']));
+ await assert.rejects(call('send_order_message',[bob,a.id,true,crypto.randomUUID(),'Forged admin','jay@example.test']));
+ pass('client cannot become admin or access another order workspace or messages');
+ await admin.query('insert into public.staging_admins values($1)',[alice]);
+ assert.ok((await call('admin_orders',[alice,0])).some(o=>o.id===beta.id));
+ assert.equal((await call('admin_orders',[alice,50])).length,0);
+ const detail=await call('order_workspace',[alice,beta.id,true]);
+ assert.deepEqual(detail.intake,intake);assert.equal(detail.clientEmail,'bob@example.test');assert.equal(detail.order.status,'refunded');assert.equal(detail.paymentIntent,'pi_test_b');
+ pass('admin list/detail include real stored status, intake, deadline and payment binding');
+ const messageId=crypto.randomUUID(),args=[bob,beta.id,false,messageId,'A client question','jay@example.test'];
+ const [sent,again]=await Promise.all([call('send_order_message',args),call('send_order_message',args,concurrent)]);
+ assert.equal(sent.id,again.id);
+ await assert.rejects(call('send_order_message',[bob,beta.id,false,messageId,'Changed body','jay@example.test']));
+ await assert.rejects(call('send_order_message',[bob,beta.id,false,crypto.randomUUID(),' '.repeat(2),'jay@example.test']));
+ const reply=await call('send_order_message',[alice,beta.id,true,crypto.randomUUID(),'An admin reply','jay@example.test']);
+ const conversation=await call('order_workspace',[bob,beta.id,false]);
+ assert.deepEqual(conversation.messages.map(m=>m.senderRole),['client','admin']);assert.equal(conversation.intake,null);assert.equal(conversation.clientEmail,null);assert.equal(conversation.paymentIntent,null);
+ const mail=(await db.query('select kind,recipient,payload from public.notification_outbox where dedupe_key in ($1,$2) order by kind',['order-message:'+sent.id,'order-message:'+reply.id])).rows;
+ assert.equal(mail.length,2);assert.deepEqual(mail.map(m=>[m.kind,m.recipient]),[['order_message_admin','jay@example.test'],['order_message_client','bob@example.test']]);assert.ok(mail.every(m=>!('body' in m.payload)));
+ pass('concurrent message retries save once and notify only the other side without emailing private content');
+ await assert.rejects(call('reserve_report',[bob,a.id,crypto.randomUUID(),'report.pdf',12,'application/pdf','c'.repeat(64)]));
+ await assert.rejects(call('reserve_report',[alice,beta.id,crypto.randomUUID(),'report.pdf',12,'application/pdf','c'.repeat(64)]));
+ const uploadId=crypto.randomUUID(),reportArgs=[alice,a.id,uploadId,'report.pdf',12,'application/pdf','c'.repeat(64)];
+ const report=await call('reserve_report',reportArgs);assert.equal((await call('reserve_report',reportArgs)).id,report.id);
+ assert.equal((await call('reserve_report',[alice,a.id,crypto.randomUUID(),'report.pdf',12,'application/pdf','c'.repeat(64)])).id,report.id);
+ await assert.rejects(call('reserve_report',[alice,a.id,uploadId,'other.pdf',12,'application/pdf','d'.repeat(64)]));
+ assert.equal((await call('order_workspace',[alice,a.id,false])).reports.length,0);
+ await assert.rejects(call('confirm_report',[alice,beta.id,report.id]));
+ await call('confirm_report',[alice,a.id,report.id]);await call('confirm_report',[alice,a.id,report.id]);
+ const ready=await call('order_workspace',[alice,a.id,false]);assert.equal(ready.reports.length,1);assert.equal(ready.fulfilmentStatus,'ready');assert.equal(ready.order.status,'paid');
+ assert.equal((await db.query('select count(*)::int n from public.notification_outbox where dedupe_key=$1',['report-ready:'+report.id])).rows[0].n,1);
+ pass('only admins upload against verified paid orders; pending reports stay hidden and ready retries queue one email');
+ await admin.query('insert into storage.objects(bucket_id,name) values($1,$2)',['order-reports',report.object_path]);
+ await user.query("select set_config('request.jwt.claim.sub',$1,false)",[alice]);
+ assert.equal((await user.query("select * from storage.objects where bucket_id='order-reports'")).rowCount,0);
+ for(const table of ['staging_admins','order_reports','order_messages']) {
+  await assert.rejects(user.query(`select * from public.${table}`));
+  await assert.rejects(user.query(`insert into public.${table} default values`));
+ }
+ for(const role of ['anon','authenticated']) {
+  const functions=(await admin.query("select p.oid::regprocedure::text signature from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('require_staging_admin','require_order_access','order_workspace','admin_orders','reserve_report','confirm_report','send_order_message')")).rows;
+  for(const f of functions) assert.equal((await admin.query("select has_function_privilege($1,$2,'EXECUTE') allowed",[role,f.signature])).rows[0].allowed,false);
+ }
+ pass('direct database and Storage clients cannot read reports/messages/admin roles or execute privileged fulfilment RPCs');
+ for(let n=0;n<19;n++) await call('send_order_message',[bob,beta.id,false,crypto.randomUUID(),'Rate limit fixture '+n,'jay@example.test']);
+ await assert.rejects(call('send_order_message',[bob,beta.id,false,crypto.randomUUID(),'Over limit','jay@example.test']));
+ assert.equal((await call('send_order_message',args)).id,sent.id);
+ pass('sender rate limit is enforced while acknowledged retries remain safe');
+ await admin.query('delete from public.staging_admins where user_id=$1',[alice]);
+ await assert.rejects(call('admin_orders',[alice,0]));
+ await assert.rejects(call('confirm_report',[alice,a.id,report.id]));
+ pass('revoking admin membership immediately denies reads and report confirmation while retaining audit records');
  console.log(`${tests} database checks passed. Hosted Supabase/Storage behavior remains a provider verification gate.`);
 } finally {
  for(const client of connections)await client.end();

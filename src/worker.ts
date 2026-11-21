@@ -1,6 +1,7 @@
+import {requireAdmin,readWorkspace,listOrders,sendMessage,uploadReport,downloadWorkspaceFile} from './workspace';
 import {z} from 'zod';
 import {verifyAccess,authenticatedActor} from './access';
-import {AppError,audit,parseInput,requireUuid,services,submitLead} from './domain';
+import {AppError,audit,parseInput,requireUuid,services,submitLead,purchasable} from './domain';
 import {alertEmail,appOrigin,publicSupabaseConfig,type Env} from './env';
 import {database,rpc} from './database';
 import {createOrder,readOrder,completeIntake,uploadFile,downloadFile,digest} from './orders';
@@ -53,13 +54,32 @@ export async function handleRequest(request:Request,env:Env):Promise<Response> {
     if(request.method!=='GET' && request.method!=='HEAD' && request.headers.get('Origin')!==appOrigin(env)) throw new AppError(403,'Invalid request origin');
     let result:Response;
     if(url.pathname==='/api/config' && request.method==='GET') {
-      result=json({...publicSupabaseConfig(env),testMode:true,services:services.map(({priceVariable,...service})=>service),audit});
+      result=json({...publicSupabaseConfig(env),testMode:true,services:services.map(({priceVariable,...service})=>({...service,purchasable:purchasable(service.id)})),audit});
     } else if(url.pathname==='/api/leads' && request.method==='POST') {
       const input=parseInput(submitLead,await readJson(request));
       await rpc(database(env),'create_lead',{p_request_id:input.requestId,p_actor_hash:await digest(new TextEncoder().encode(accessSubject)),p_name:input.name,p_email:input.email,p_message:input.message,p_service_id:input.serviceId??null,p_alert_email:alertEmail(env)});
       result=json({received:true},201);
     } else if(url.pathname==='/api/orders' && request.method==='POST') {
       result=json(await createOrder(await authenticatedActor(request,env),await readJson(request),env),201);
+    } else if(url.pathname==='/api/admin/orders' && request.method==='GET') {
+      const actor=await authenticatedActor(request,env);
+      await requireAdmin(actor,env);
+      const offset=Number(url.searchParams.get('offset')??'0');
+      if(!Number.isSafeInteger(offset) || offset<0) throw new AppError(400,'Invalid offset');
+      result=json(await listOrders(actor,offset,env));
+    } else if(/^\/api\/(admin\/)?orders\/[^/]+\/(workspace|reports|messages)(?:\/[^/]+)?$/.test(url.pathname) || /^\/api\/admin\/orders\//.test(url.pathname)) {
+      const route=/^\/api\/(admin\/)?orders\/([^/]+)(?:\/(workspace|reports|messages|files)(?:\/([^/]+))?)?$/.exec(url.pathname);
+      if(!route) throw new AppError(404,'Not found');
+      const admin=!!route[1],id=requireUuid(route[2]!),actor=await authenticatedActor(request,env);
+      if(admin) await requireAdmin(actor,env);
+      if(request.method==='GET' && (!route[3] || route[3]==='workspace') && !route[4]) result=json(await readWorkspace(actor,id,admin,env));
+      else if(request.method==='POST' && route[3]==='messages' && !route[4]) result=json(await sendMessage(actor,id,admin,await readJson(request),env),201);
+      else if(request.method==='GET' && (route[3]==='reports' || (admin && route[3]==='files')) && route[4]) result=await downloadWorkspaceFile(actor,id,requireUuid(route[4]),admin,route[3]==='reports',env);
+      else if(request.method==='POST' && admin && route[3]==='reports' && !route[4]) {
+        let name:string;
+        try {name=decodeURIComponent(request.headers.get('X-File-Name')??'');}catch{throw new AppError(400,'Invalid file name');}
+        result=json(await uploadReport(actor,id,requireUuid(request.headers.get('X-Upload-Id')??''),name,request.headers.get('Content-Type')??'',await readBytes(request,10485760),env),201);
+      } else throw new AppError(405,'Method not allowed');
     } else {
       const route=/^\/api\/orders\/([^/]+)(?:\/(checkout|complete-intake|files)(?:\/([^/]+))?)?$/.exec(url.pathname);
       if(route) {

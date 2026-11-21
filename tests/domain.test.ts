@@ -18,7 +18,7 @@ describe('fixed service boundaries',()=>{
   expect(submitOrder.safeParse({...base,intake:{...base.intake,markets:''}}).success).toBe(false);
   expect(submitOrder.safeParse({...base,serviceId:'catalog-starter',intake:{...base.intake,productCount:2001}}).success).toBe(false);
   expect(submitOrder.safeParse({...base,serviceId:'catalog-hosted',intake:{...base.intake,productCount:9000}}).success).toBe(false);
-  expect(submitOrder.safeParse({...base,serviceId:'catalog-hosted',intake:{...base.intake,productCount:9000,distributorCount:3}}).success).toBe(true);
+  expect(submitOrder.safeParse({...base,serviceId:'catalog-hosted',intake:{...base.intake,productCount:9000,distributorCount:3}}).success).toBe(false);
  });
  it('has no marketing subscription input',()=>{
   expect(submitLead.safeParse({requestId:crypto.randomUUID(),name:'Test',email:'person@example.test',message:'An order question',subscribe:true}).success).toBe(false);

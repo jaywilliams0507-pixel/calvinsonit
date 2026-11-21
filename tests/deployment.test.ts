@@ -6,6 +6,7 @@ const secrets={SUPABASE_SERVICE_ROLE_KEY:'sb_secret_fixture',STRIPE_SECRET_KEY:'
 const ref='refs/heads/codex/phase1-protected-staging';
 describe('staging deployment guard',()=>{
  it('allows only a protected staging configuration',()=>{expect(prepareStaging(base,variables,secrets,ref).vars.APP_ORIGIN).toBe(variables.APP_ORIGIN);});
+ it('does not require a price for held Hosted orders',()=>{const {STRIPE_PRICE_CATALOG_HOSTED:held,...active}=variables;expect(prepareStaging(base,active,secrets,ref).vars.STRIPE_PRICE_CATALOG_HOSTED).toBeUndefined();});
  it('rejects production branches, hostnames, routes, preview URLs and asset bypass',()=>{
   expect(()=>prepareStaging(base,variables,secrets,'refs/heads/main')).toThrow();
   expect(()=>prepareStaging(base,{...variables,APP_ORIGIN:'https://calvinsonit.org'},secrets,ref)).toThrow();

@@ -1,3 +1,9 @@
+# Current continuation — November 21, 2026
+
+Jay chose build, not buy; the November 5 vendor research is superseded. Continue the original implementation, with admin report delivery, private client downloads, ready email, two-way per-order messages and admin list/detail. Hosted is displayed at $1,490 and blocked from intake/checkout; GBP/Automation are email-only. The original baseline was verified at a685f11618bf97d1f6a6d37a4edd2dc6e0afa3aa (56 checks), then rebased locally onto live e40b5a94f2bb3f455b19fc0d5d0c2cd601dea3ac. Both legal files use exact live bytes. The existing remote staging branch is the sole destination; preserve shared history and never unconditionally force-push. Root maintains Agent Ops and reports to Jay.
+
+Provider provisioning, external migrations, sandbox acceptance, paid plans, DNS and deployment remain out of scope pending verified isolated owner-provisioned staging resources. The original plan below records the November 15 implementation and does not override these current restrictions.
+
 # Phase 1 staging work plan
 
 Work runs in the cloud against `release/legal-buyer-fixes` at `9bd60ad`. No Mac dependency. The build branch is `codex/phase1-protected-staging`. No merge, DNS change, live Stripe change, repository visibility change, production deployment, or hosting cutover is authorized.

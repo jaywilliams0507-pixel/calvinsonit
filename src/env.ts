@@ -5,7 +5,7 @@ export interface Env {
   APP_ORIGIN:string; ACCESS_TEAM_DOMAIN:string; ACCESS_AUD:string;
   SUPABASE_URL:string; SUPABASE_PUBLISHABLE_KEY:string; SUPABASE_SERVICE_ROLE_KEY:string;
   STRIPE_SECRET_KEY:string; STRIPE_WEBHOOK_SECRET:string;
-  STRIPE_PRICE_AI_AUDIT:string; STRIPE_PRICE_CATALOG_STARTER:string; STRIPE_PRICE_CATALOG_FULL:string; STRIPE_PRICE_CATALOG_HOSTED:string;
+  STRIPE_PRICE_AI_AUDIT:string; STRIPE_PRICE_CATALOG_STARTER:string; STRIPE_PRICE_CATALOG_FULL:string; STRIPE_PRICE_CATALOG_HOSTED?:string;
   ALERT_EMAIL:string; EMAIL_FROM:string; STAGING_EMAIL_ALLOWLIST:string; RESEND_API_KEY:string;
 }
 export function configured(value:string|undefined):value is string { return !!value && !value.includes('REPLACE'); }

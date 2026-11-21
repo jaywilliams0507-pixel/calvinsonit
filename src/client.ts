@@ -1,5 +1,6 @@
 import { createClient, type Session, type SupabaseClient } from '@supabase/supabase-js';
 import type { OrderView, Service } from './domain';
+import type {WorkspaceView} from './domain';
 
 type PublicService = Pick<Service, 'id' | 'name' | 'amountCents' | 'currency' | 'requiresFiles' | 'maxFiles' | 'maxProducts'>;
 type Config = {
@@ -105,7 +106,7 @@ function returnPath(): string {
   sessionStorage.removeItem(storagePrefix + 'return');
   if (!saved) return '/intake/';
   const target = new URL(saved, location.origin);
-  if (target.origin !== location.origin || !['/intake/', '/order/'].includes(target.pathname)) return '/intake/';
+  if (target.origin !== location.origin || !['/intake/', '/order/', '/admin/'].includes(target.pathname)) return '/intake/';
   return target.pathname + target.search;
 }
 
@@ -116,6 +117,7 @@ function applySession(session: Session | null): void {
   const page = document.body.dataset.page;
   if (page === 'intake') element('intake-panel').hidden = !session;
   if (!session && page === 'order') element('order-panel').hidden = true;
+  if (!session && page === 'admin') {element('admin-list').hidden=true;element('admin-detail').hidden=true;}
 }
 
 async function connectAuth(onSignedIn?: () => Promise<void>): Promise<void> {
@@ -166,7 +168,8 @@ function addServiceOptions(select: HTMLSelectElement): void {
   for (const service of config.services) {
     const option = document.createElement('option');
     option.value = service.id;
-    option.textContent = `${service.name} · ${money(service.amountCents, service.currency)}`;
+    option.disabled=service.id==='catalog-hosted';
+    option.textContent = `${service.name} · ${money(service.amountCents, service.currency)}${service.id==='catalog-hosted'?' · Not accepting orders':''}`;
     select.append(option);
   }
 }
@@ -200,10 +203,10 @@ async function intakePage(): Promise<void> {
   const select = element<HTMLSelectElement>('service');
   addServiceOptions(select);
   const requested = new URLSearchParams(location.search).get('service');
-  if (requested && config.services.some(service => service.id === requested)) select.value = requested;
+  if (requested && config.services.some(service => service.id === requested && service.id!=='catalog-hosted')) select.value = requested;
   else if (requested) message('page-message', 'That service is not accepting orders. Choose one of the available fixed-price packages.', 'error');
   else message('page-message', '');
-  if (requested && config.services.some(service => service.id === requested)) message('page-message', '');
+  if (requested && config.services.some(service => service.id === requested && service.id!=='catalog-hosted')) message('page-message', '');
   const updateService = (): void => {
     const service = selectedService(select.value);
     element('intake-title').textContent = service.name;
@@ -322,7 +325,7 @@ async function orderPage(): Promise<void> {
     element('due-row').hidden = !order.dueDate;
     element('order-due').textContent = order.dueDate ? dueDate(order.dueDate) : '';
     element('order-hosted-note').hidden = service.id !== 'catalog-hosted';
-    element('checkout').hidden = order.status !== 'awaiting_payment';
+    element('checkout').hidden = order.status !== 'awaiting_payment' || service.id==='catalog-hosted';
     element('draft-panel').hidden = order.status !== 'draft';
     const pending = order.pendingFiles ?? [];
     element('pending-files-note').hidden = pending.length === 0;
@@ -345,8 +348,10 @@ async function orderPage(): Promise<void> {
     element('order-file-help').textContent = `You can add up to ${remaining} more ${remaining === 1 ? 'file' : 'files'}. CSV or XLSX, at most 10 MiB each.`;
     element<HTMLButtonElement>('complete-intake').disabled = !order.files.length || pending.length > 0;
   }
+  const refreshWorkspace=bindWorkspace(orderId,false);
   async function refresh(): Promise<void> {
     render(await api<OrderView>(`/api/orders/${orderId}`, undefined, true));
+    await refreshWorkspace();
   }
   function schedulePoll(): void {
     if (current?.status !== 'awaiting_payment' || pollCount >= 12) return;
@@ -397,6 +402,107 @@ async function orderPage(): Promise<void> {
   if (element('auth-panel').hidden === false) message('page-message', 'Sign in to view your saved order.');
 }
 
+function workspaceBase(id:string,admin:boolean):string {return `/api/${admin?'admin/':''}orders/${id}`;}
+async function downloadWorkspace(id:string,admin:boolean,kind:'reports'|'files',file:{id:string;name:string}):Promise<void> {
+  const response=await request(`${workspaceBase(id,admin)}/${kind}/${file.id}`,{},true);
+  const url=URL.createObjectURL(await response.blob()),link=document.createElement('a');
+  link.href=url;link.download=file.name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function workspaceFiles(target:string,id:string,admin:boolean,kind:'reports'|'files',files:{id:string;name:string;bytes:number}[]):void {
+  const list=element(target);list.replaceChildren();
+  if(!files.length) {list.textContent='No files yet.';return;}
+  for(const file of files) {
+    const item=document.createElement('li'),button=document.createElement('button');button.type='button';
+    button.textContent=`Download ${file.name} (${Math.ceil(file.bytes/1024)} KiB)`;
+    button.addEventListener('click',()=>{void busy(button,()=>downloadWorkspace(id,admin,kind,file)).catch(error=>message('workspace-message',errorMessage(error),'error'));});
+    item.append(button);list.append(item);
+  }
+}
+function bindWorkspace(id:string,admin:boolean,onChanged?:()=>Promise<void>):()=>Promise<void> {
+  const base=workspaceBase(id,admin),form=element<HTMLFormElement>('message-form');
+  const refresh=async ():Promise<void>=>{
+    const view=await api<WorkspaceView>(`${base}/workspace`,undefined,true);
+    element('fulfilment-status').textContent=view.fulfilmentStatus==='ready'?'Report ready':'Report pending';
+    workspaceFiles('report-files',id,admin,'reports',view.reports);
+    const list=element('message-list');list.replaceChildren();
+    if(!view.messages.length) list.textContent='No messages yet.';
+    for(const item of view.messages) {
+      const row=document.createElement('li'),label=document.createElement('strong'),body=document.createElement('p');
+      label.textContent=`${item.senderRole==='admin'?'CalvinsonIT':'Client'} · ${new Date(item.createdAt).toLocaleString('en-US',{timeZone:'America/New_York'})} Eastern`;
+      body.textContent=item.body;row.append(label,body);list.append(row);
+    }
+    if(admin) {
+      element('admin-detail').hidden=false;
+      element('admin-order-id').textContent=view.order.id;
+      element('admin-order-status').textContent=`${view.order.status} · ${view.fulfilmentStatus}`;
+      element('admin-order-service').textContent=selectedService(view.order.serviceId).name;
+      element('admin-client').textContent=view.clientEmail??'';
+      element('admin-due').textContent=view.order.dueDate?dueDate(view.order.dueDate):'Not scheduled';
+      element('admin-intake').textContent=JSON.stringify(view.intake,null,2);
+      workspaceFiles('admin-input-files',id,true,'files',view.order.files);
+      const payment=element<HTMLAnchorElement>('admin-payment');payment.hidden=!view.paymentUrl;
+      if(view.paymentUrl && /^https:\/\/dashboard\.stripe\.com\/test\/payments\/pi_[A-Za-z0-9]+$/.test(view.paymentUrl)) payment.href=view.paymentUrl;
+      else {payment.hidden=true;payment.removeAttribute('href');}
+      element('report-upload-form').hidden=view.order.status!=='paid';
+    }
+  };
+  form.addEventListener('submit',event=>{
+    event.preventDefault();const button=form.querySelector<HTMLButtonElement>('button')!;
+    void busy(button,async()=>{
+      const body=field(new FormData(form),'body');
+      await api(`${base}/messages`,{requestId:requestId(`message:${id}:${admin}`,body),body},true);
+      sessionStorage.removeItem(storagePrefix+`message:${id}:${admin}`);form.reset();
+      await refresh();if(onChanged) await onChanged();message('workspace-message','Message saved. An email notification is queued.','success');
+    }).catch(error=>message('workspace-message',errorMessage(error),'error'));
+  });
+  if(admin) {
+    const upload=element<HTMLFormElement>('report-upload-form');
+    upload.addEventListener('submit',event=>{
+      event.preventDefault();const button=upload.querySelector<HTMLButtonElement>('button')!;
+      void busy(button,async()=>{
+        const file=element<HTMLInputElement>('report-upload').files?.[0];if(!file) throw new Error('Choose a report file.');
+        if(!file.size || file.size>10485760) throw new Error('Reports must be nonempty and at most 10 MiB.');
+        let uploadId=uploadIds.get(file);if(!uploadId) {uploadId=crypto.randomUUID();uploadIds.set(file,uploadId);}
+        const types:Record<string,string>={pdf:'application/pdf',csv:'text/csv',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',zip:'application/zip'};
+        const type=types[file.name.split('.').pop()?.toLowerCase()??''];if(!type) throw new Error('Choose PDF, CSV, XLSX or ZIP.');
+        await request(`${base}/reports`,{method:'POST',body:file,headers:{'Content-Type':type,'X-File-Name':encodeURIComponent(file.name),'X-Upload-Id':uploadId}},true);
+        upload.reset();await refresh();if(onChanged) await onChanged();message('workspace-message','Report ready. The client email is queued.','success');
+      }).catch(error=>message('workspace-message',errorMessage(error),'error'));
+    });
+  }
+  return refresh;
+}
+async function adminPage():Promise<void> {
+  const id=new URLSearchParams(location.search).get('id');
+  if(id && !/^[0-9a-f-]{36}$/i.test(id)) throw new Error('Invalid order ID.');
+  let refreshDetail:(()=>Promise<void>)|undefined;
+  let offset=0;
+  const load=async ():Promise<void>=>{
+    type Row={id:string;serviceId:Service['id'];status:string;fulfilmentStatus:string;dueDate:string|null;clientEmail:string};
+    const rows=await api<Row[]>(`/api/admin/orders?offset=${offset}`,undefined,true);
+    element('admin-list').hidden=false;message('page-message','');
+    const list=element('admin-orders');list.replaceChildren();
+    if(!rows.length) list.textContent='No orders on this page.';
+    for(const row of rows) {
+      const item=document.createElement('li'),link=document.createElement('a');
+      link.href=`/admin/?id=${encodeURIComponent(row.id)}`;
+      link.textContent=`${row.clientEmail} · ${selectedService(row.serviceId).name} · ${row.status} · ${row.fulfilmentStatus} · Due ${row.dueDate??'not scheduled'} · ${row.id}`;
+      item.append(link);list.append(item);
+    }
+    element<HTMLButtonElement>('admin-previous').disabled=offset===0;
+    element<HTMLButtonElement>('admin-next').disabled=rows.length<50;
+    if(refreshDetail) await refreshDetail();
+  };
+  for(const [buttonId,step] of [['admin-previous',-50],['admin-next',50]] as const) {
+    element<HTMLButtonElement>(buttonId).addEventListener('click',event=>{
+      void busy(event.currentTarget as HTMLButtonElement,async()=>{offset=Math.max(0,offset+step);await load();}).catch(error=>message('page-message',errorMessage(error),'error'));
+    });
+  }
+  if(id) refreshDetail=bindWorkspace(id,true,load);
+  element<HTMLButtonElement>('admin-refresh').addEventListener('click',event=>{void busy(event.currentTarget as HTMLButtonElement,load).catch(error=>message('page-message',errorMessage(error),'error'));});
+  await connectAuth(load);
+}
+
 async function callbackPage(): Promise<void> {
   const params = new URLSearchParams(location.search);
   if (params.has('error')) throw new Error('Sign-in was not completed. Return to intake and try again.');
@@ -419,6 +525,7 @@ async function start(): Promise<void> {
   auth = createClient(config.supabaseUrl, config.supabasePublishableKey, { auth: { flowType: 'pkce', detectSessionInUrl: false, persistSession: true, autoRefreshToken: true } });
   if (page === 'intake') await intakePage();
   else if (page === 'order') await orderPage();
+  else if (page === 'admin') await adminPage();
   else if (page === 'callback') await callbackPage();
 }
 

@@ -21,6 +21,7 @@ function testSession(session:Stripe.Checkout.Session):void {
 export async function checkout(actor:Actor,orderId:string,env:Env):Promise<{url:string}> {
   const stripe=stripeClient(env),db=database(env);
   let attempt=attemptSchema.parse(await rpc(db,'reserve_checkout',{p_user_id:actor.id,p_order_id:orderId,p_price_ids:Object.fromEntries(services.map(service=>[service.id,env[service.priceVariable]]))}));
+  if(attempt.service_id==='catalog-hosted') throw new AppError(409,'Hosted Feed Build is not available for purchase');
   if(attempt.state==='review') throw new AppError(409,'Checkout needs an operator review before retrying');
   if(attempt.stripe_session_id) {
     const existing=await stripe.checkout.sessions.retrieve(attempt.stripe_session_id);

@@ -1,3 +1,37 @@
+# Current verification — November 21, 2026
+
+The original branch at `a685f11618bf97d1f6a6d37a4edd2dc6e0afa3aa` passed its complete 56-check baseline before edits: 26 unit/security, 14 PostgreSQL and 16 desktop/mobile browser cases. Dependency install required a task-owned `/tmp` npm cache in this restricted cloud environment; the lockfile was not changed.
+
+The same implementation was rebased locally onto live `e40b5a94f2bb3f455b19fc0d5d0c2cd601dea3ac`. Both legal conflicts were resolved by taking exact live bytes. To avoid rewriting the shared remote branch/PR, the original staging head is retained as an additional merge parent after the local rebase; publication can be an ordinary fast-forward on the sole authorized branch. No new remote branch or PR is needed. No deployment marker appears in the review head commit message.
+
+| Current local check | Result |
+| --- | --- |
+| `npm run check` | Both TypeScript projects, 40 unit/security/provider-protocol tests and static browser build pass. No lint script is configured. |
+| `npm run test:db` | 22 checks pass on disposable PostgreSQL 17 containers with Supabase auth/storage schema fixtures; both migrations applied only there. |
+| `npm run test:browser` | 24 desktop/mobile cases pass in cloud Chromium against the built static artifact and mocked provider APIs. |
+| `wrangler deploy --dry-run` | Worker bundle and allowlisted assets compile; no provider upload. XDG config/log paths use task-owned `/tmp` directories. |
+| `git diff --check` | Pass. |
+| Buyer restrictions | Hosted displayed at $1,490; disabled intake choice, Zod rejection, Worker legacy-checkout denial, SQL new-order/checkout denial. GBP/Automation retain email-only service CTAs; neither is a valid order service. |
+| Legal files | Empty diff versus live commit; hashes below. Build copies these bytes unchanged. |
+| Provider isolation/flows | Not verified; no external migration, sign-in, payment, email or deployment performed. |
+
+Current total: **86 checks**, preserving all original test cases with updated Hosted assertions for the new buyer restriction. New coverage includes Access/session/admin denials, cross-client workspace/Storage isolation, SQL grants and RPC denial, concurrent message dedupe, sender limits, report upload/reload recovery, atomic ready outbox, admin revocation, protected downloads, safe message rendering, Stripe test dashboard links, allowlist suppression and Resend retry keys.
+
+SHA-256, identical to live source and built copies:
+
+- `terms.html`: `8e99289059cf7e2f0885e3aabcd87837b1976b36b945daebb08d306ae373e1ee`
+- `privacy.html`: `d052dfc9ac9459d57857c5b38f8c0ade15fab910198ef2f853df5e48cf8819c0`
+
+Read-only GitHub Pages inspection confirms legacy hosting from `main` at `/` with `calvinsonit.org`. The only branch workflow runs checks on ordinary staging pushes and gates provider deployment behind an explicit head-commit marker. No workflow, live branch, Pages setting or deployment trigger was changed by this continuation.
+
+Current UI captures contain only fabricated test identities, files and message content: [admin desktop](evidence/fulfilment-admin-desktop.png), [admin mobile](evidence/fulfilment-admin-mobile.png), [client desktop](evidence/fulfilment-client-desktop.png), [client mobile](evidence/fulfilment-client-mobile.png). The literal HTML-like strings demonstrate text-only rendering. These captures prove local UI behavior, not deployed Access or hosted providers. Current code received self-review; no independent or cross-vendor review of this extension is claimed.
+
+Remaining gates: owner-provisioned and verified isolated Cloudflare/Supabase/Stripe-test/Resend resources; privileged staging migration and tester/admin provisioning; managed sign-in and sandbox payment/webhook/email/Storage acceptance evidence. Exact required/optional configuration and acceptance checks are in [staging operations](staging-operations.md). Paid plans, account signup, customer messages, DNS, live Stripe, production writes/deployments and merging remain unauthorized. Root maintains Agent Ops and reports to Jay.
+
+The record below is historical November 15 evidence, including tooling limitations from that task. Its original four-purchasable-service and base-commit statements are superseded by the current continuation above.
+
+---
+
 # Verification record
 
 ## Scope

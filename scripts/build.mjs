@@ -1,7 +1,7 @@
 import {rm,mkdir,cp,readFile,writeFile,readdir} from 'node:fs/promises';
 import {build} from 'esbuild';
 const rootFiles=['index.html','terms.html','privacy.html','audit.html','gbp.html','local.html'];
-const directories=['ai-visibility-audit','catalog-cleanup','google-business-profile','automation','intake','contact','order','auth'];
+const directories=['ai-visibility-audit','catalog-cleanup','google-business-profile','automation','intake','contact','order','auth','admin'];
 await rm('dist',{recursive:true,force:true});
 await mkdir('dist/assets',{recursive:true});
 for(const file of rootFiles) await cp(file,`dist/${file}`);

@@ -4,12 +4,13 @@ import { services, audit, type OrderView } from '../src/domain';
 const orderId = '11111111-1111-4111-8111-111111111111';
 const userId = '22222222-2222-4222-8222-222222222222';
 const user = { id: userId, email: 'tester@example.test', aud: 'authenticated', role: 'authenticated', app_metadata: {}, user_metadata: {}, created_at: '2026-11-15T12:00:00Z' };
-const publicConfig = { testMode: true, supabaseUrl: 'https://staging-example.supabase.co', supabasePublishableKey: 'test-publishable-key', services, audit };
+const publicConfig = { testMode: true, supabaseUrl: 'https://staging-example.supabase.co', supabasePublishableKey: 'test-publishable-key', services:services.map(s=>({...s,purchasable:s.id!=='catalog-hosted'})), audit };
 const order: OrderView = { id: orderId, serviceId: 'ai-audit', status: 'awaiting_payment', amountCents: 29900, currency: 'usd', intakeCompletedAt: '2026-11-15T12:00:00Z', paidAt: null, dueDate: null, files: [], pendingFiles: [] };
 
 async function configure(page: Page, authenticated = false): Promise<void> {
   await page.route('https://fonts.googleapis.com/**', route => route.abort());
   await page.route('https://fonts.gstatic.com/**', route => route.abort());
+  await page.route(`**/api/orders/${orderId}/workspace`,route=>route.fulfill({json:{order,fulfilmentStatus:'pending',intake:null,clientEmail:null,paymentIntent:null,paymentUrl:null,reports:[],messages:[]}}));
   await page.route('**/api/config', route => route.fulfill({ json: publicConfig }));
   await page.route('https://staging-example.supabase.co/auth/v1/**', route => route.fulfill({ json: user }));
   if (authenticated) {
@@ -167,18 +168,113 @@ test.describe('Frontend with mocked providers', () => {
     await configure(page);
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/catalog-cleanup/');
-    for (const service of services.filter(item => item.requiresFiles)) await expect(page.locator(`a[href="/intake/?service=${service.id}"]`).first()).toBeVisible();
+    for (const service of services.filter(item => item.requiresFiles && item.id!=='catalog-hosted')) await expect(page.locator(`a[href="/intake/?service=${service.id}"]`).first()).toBeVisible();
+    await expect(page.locator('a[href="/intake/?service=catalog-hosted"]')).toHaveCount(0);
+    await expect(page.locator('main')).toContainText('$1,490');
     await page.screenshot({ path: testInfo.outputPath('catalog-packages.png'), fullPage: true });
     for (const path of ['/google-business-profile/', '/automation/']) {
       await page.goto(path);
       await expect(page.getByRole('note').filter({ hasText: 'Not accepting orders' })).toBeVisible();
       await expect(page.locator('a[href*="stripe.com"]')).toHaveCount(0);
+      await expect(page.getByRole('link',{name:'Email about this service'})).toHaveAttribute('href','mailto:hello@calvinsonit.org');
+      await expect(page.locator('main a[href*="/intake/"]')).toHaveCount(0);
       expect(await page.locator('main').innerText()).not.toMatch(/\bquote\b/i);
     }
     await page.goto('/ai-visibility-audit/');
     await expect(page.locator('a[href*="buy.stripe.com"]')).toHaveCount(0);
     await expect(page.locator('main')).toContainText('20 questions on each of five engines');
     await expect(page.locator('main')).toContainText('100 checks');
+  });
+
+  test('Hosted stays visible but cannot be selected for intake',async({page})=>{
+    await configure(page,true);
+    await page.goto('/intake/?service=catalog-hosted');
+    await expect(page.locator('#page-message')).toContainText('not accepting orders');
+    await expect(page.locator('#service option[value="catalog-hosted"]')).toBeDisabled();
+    await expect(page.locator('#service option[value="catalog-hosted"]')).toContainText('$1,490');
+  });
+
+  test('admin denial never exposes order detail',async({page})=>{
+    await configure(page,true);
+    await page.route('**/api/admin/orders?*',route=>route.fulfill({status:403,json:{error:'Administrator access required'}}));
+    await page.goto(`/admin/?id=${orderId}`);
+    await expect(page.locator('#page-message')).toHaveText('Administrator access required');
+    await expect(page.locator('#admin-list')).toBeHidden();
+    await expect(page.locator('#admin-detail')).toBeHidden();
+  });
+
+  test('admin reviews intake and test payment, retries a report then marks it ready',async({page},testInfo)=>{
+    await configure(page,true);
+    const reportId='33333333-3333-4333-8333-333333333333';
+    const detail={order:{...order,status:'paid',dueDate:'2026-11-27'},fulfilmentStatus:'pending',intake:{businessName:'Example Business',notes:'<script>window.testInjection=true</script>'},clientEmail:'tester@example.test',paymentIntent:null,paymentUrl:'https://dashboard.stripe.com/test/payments/pi_fixture',reports:[] as {id:string;name:string;bytes:number}[],messages:[] as {id:string;senderRole:string;body:string;createdAt:string}[]};
+    await page.route('**/api/admin/orders?*',route=>route.fulfill({json:[{id:orderId,serviceId:'ai-audit',status:'paid',fulfilmentStatus:detail.fulfilmentStatus,dueDate:'2026-11-27',clientEmail:'tester@example.test'}]}));
+    await page.route(`**/api/admin/orders/${orderId}/workspace`,route=>route.fulfill({json:detail}));
+    const ids:string[]=[];
+    await page.route(`**/api/admin/orders/${orderId}/reports`,async route=>{
+      ids.push(route.request().headers()['x-upload-id']??'');
+      if(ids.length===1) {await route.fulfill({status:503,json:{error:'Temporary upload failure'}});return;}
+      detail.reports=[{id:reportId,name:'report.pdf',bytes:12}];detail.fulfilmentStatus='ready';
+      await route.fulfill({json:{id:reportId}});
+    });
+    await page.route(`**/api/admin/orders/${orderId}/messages`,async route=>{
+      const body=route.request().postDataJSON() as {requestId:string;body:string};
+      expect(Object.keys(body).sort()).toEqual(['body','requestId']);
+      detail.messages.push({id:crypto.randomUUID(),senderRole:'admin',body:body.body,createdAt:'2026-11-21T12:01:00Z'});
+      await route.fulfill({json:{id:detail.messages.at(-1)?.id}});
+    });
+    await page.goto(`/admin/?id=${orderId}`);
+    await expect(page.locator('#admin-order-status')).toContainText('paid');
+    await expect(page.locator('#admin-intake')).toContainText('<script>');
+    expect(await page.evaluate(()=>('testInjection' in window))).toBe(false);
+    await expect(page.getByRole('link',{name:'View Stripe test payment'})).toHaveAttribute('href','https://dashboard.stripe.com/test/payments/pi_fixture');
+    await page.getByLabel('Report file',{exact:true}).setInputFiles({name:'report.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-fixture')});
+    await page.getByRole('button',{name:'Upload report',exact:true}).click();
+    await expect(page.locator('#workspace-message')).toContainText('Temporary upload failure');
+    await page.getByRole('button',{name:'Upload report',exact:true}).click();
+    await expect(page.locator('#workspace-message')).toContainText('client email is queued');
+    expect(ids).toHaveLength(2);expect(ids[0]).toBe(ids[1]);
+    await expect(page.locator('#fulfilment-status')).toHaveText('Report ready');
+    await expect(page.getByRole('button',{name:/Download report.pdf/})).toBeVisible();
+    await page.getByLabel('Message about this order').fill('Your report is ready. Reply here with questions.');
+    await page.getByRole('button',{name:'Send order message',exact:true}).click();
+    await expect(page.locator('#workspace-message')).toContainText('email notification is queued');
+    await expect(page.locator('#message-list')).toContainText('Reply here with questions');
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+    await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+    await page.screenshot({path:testInfo.outputPath('admin-ready.png'),fullPage:true});
+  });
+
+  test('client downloads private report and retries an order reply with the same request ID',async({page},testInfo)=>{
+    await configure(page,true);
+    const reportId='33333333-3333-4333-8333-333333333333';
+    const detail={order:{...order,status:'paid'},fulfilmentStatus:'ready',intake:null,clientEmail:null,paymentIntent:null,paymentUrl:null,reports:[{id:reportId,name:'report.pdf',bytes:12}],messages:[{id:'44444444-4444-4444-8444-444444444444',senderRole:'admin',body:'Your report is ready. <img src=x onerror="window.testInjection=true">',createdAt:'2026-11-21T12:00:00Z'}]};
+    await page.route(`**/api/orders/${orderId}`,route=>route.fulfill({json:{...order,status:'paid'}}));
+    await page.route(`**/api/orders/${orderId}/workspace`,route=>route.fulfill({json:detail}));
+    await page.route(`**/api/orders/${orderId}/reports/${reportId}`,route=>{
+      expect(route.request().headers().authorization).toContain('Bearer ');
+      return route.fulfill({body:'%PDF-fixture',headers:{'Content-Type':'application/octet-stream','Content-Disposition':'attachment; filename="report.pdf"'}});
+    });
+    const ids:string[]=[];
+    await page.route(`**/api/orders/${orderId}/messages`,async route=>{
+      const body=route.request().postDataJSON() as {requestId:string;body:string};ids.push(body.requestId);
+      if(ids.length===1) {await route.fulfill({status:503,json:{error:'Temporary message failure'}});return;}
+      detail.messages.push({id:crypto.randomUUID(),senderRole:'client',body:body.body,createdAt:'2026-11-21T12:01:00Z'});
+      await route.fulfill({json:{id:detail.messages.at(-1)?.id}});
+    });
+    await page.goto(`/order/?id=${orderId}`);
+    await expect(page.locator('#message-list')).toContainText('<img');
+    expect(await page.locator('#message-list img').count()).toBe(0);
+    const download=page.waitForEvent('download');await page.getByRole('button',{name:/Download report.pdf/}).click();
+    expect((await download).suggestedFilename()).toBe('report.pdf');
+    await page.getByLabel('Message about this order').fill('Thanks. Please clarify item one.');
+    await page.getByRole('button',{name:'Send order message',exact:true}).click();
+    await expect(page.locator('#workspace-message')).toContainText('Temporary message failure');
+    await page.getByRole('button',{name:'Send order message',exact:true}).click();
+    await expect(page.locator('#workspace-message')).toContainText('email notification is queued');
+    await expect(page.locator('#message-list')).toContainText('Please clarify item one');
+    expect(ids).toHaveLength(2);expect(ids[0]).toBe(ids[1]);
+    await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+    await page.screenshot({path:testInfo.outputPath('client-ready.png'),fullPage:true});
   });
 
   test('callback rejects a stored off-site return URL', async ({ page }) => {

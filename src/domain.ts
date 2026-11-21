@@ -20,6 +20,7 @@ const intake = z.object({
 }).strict();
 export const submitOrder = z.object({requestId:uuid,serviceId,intake,termsAccepted:z.literal(true)}).strict().superRefine((value, ctx) => {
   const service = getService(value.serviceId);
+  if(service.id==='catalog-hosted') ctx.addIssue({code:'custom',path:['serviceId'],message:'Hosted Feed Build is not available for purchase'});
   if (service.id === 'ai-audit') {
     for (const field of ['services','markets'] as const) if ((value.intake[field]?.length ?? 0) < 2) ctx.addIssue({code:'custom',path:['intake',field],message:`Enter your ${field}`});
   } else {
@@ -34,3 +35,14 @@ export function getService(id: ServiceId): Service { return services.find(s=>s.i
 export class AppError extends Error { constructor(public status:number, message:string) { super(message); } }
 export function requireUuid(value:string):string { const result=uuid.safeParse(value); if(!result.success) throw new AppError(400,'Invalid identifier'); return result.data; }
 export function parseInput<T>(schema:z.ZodType<T>, value:unknown):T { const parsed=schema.safeParse(value); if(!parsed.success) throw new AppError(400,parsed.error.issues[0]?.message ?? 'Invalid input'); return parsed.data; }
+
+export const submitMessage=z.object({requestId:uuid,body:z.string().trim().min(1).max(3000)}).strict();
+export function purchasable(id:ServiceId):boolean {return id!=='catalog-hosted';}
+
+const fileView=z.object({id:z.uuid(),name:z.string(),bytes:z.number().int()});
+export const workspaceView=z.object({
+ order:orderView,fulfilmentStatus:z.enum(['pending','ready']),intake:z.record(z.string(),z.unknown()).nullable(),
+ clientEmail:z.string().nullable(),paymentIntent:z.string().nullable(),reports:z.array(fileView),
+ messages:z.array(z.object({id:z.uuid(),senderRole:z.enum(['client','admin']),body:z.string(),createdAt:z.string()})),
+});
+export type WorkspaceView=z.infer<typeof workspaceView> & {paymentUrl?:string|null};

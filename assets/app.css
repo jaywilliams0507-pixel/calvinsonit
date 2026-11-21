@@ -60,3 +60,7 @@ body[data-page]>.skip:focus{top:10px}
 @media(max-width:650px){.app-main{padding-top:32px;padding-bottom:52px}.app-header .wrap{min-height:76px;gap:16px}.app-header img{width:150px}.app-header nav{gap:14px;font-size:14px}.app-card{padding:22px}.app-form .btn,.app-actions .btn{width:100%;justify-content:center}.order-details>div{grid-template-columns:1fr;gap:4px}.package-grid{grid-template-columns:1fr}.service-hold{font-size:14px}.staging-notice{font-size:12px}}
 
 .app-card>.form-note{color:#5c4518}
+
+#admin-intake {white-space:pre-wrap;overflow-wrap:anywhere;}
+#message-list p {white-space:pre-wrap;overflow-wrap:anywhere;}
+#admin-orders a,.file-list button {overflow-wrap:anywhere;}
