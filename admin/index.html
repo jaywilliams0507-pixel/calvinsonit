@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Order administration | CalvinsonIT</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Geist:wght@400..700&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/app.css">
+<script type="module" src="/assets/app.js"></script>
+</head>
+<body data-page="admin">
+<a class="skip" href="#main">Skip to content</a>
+<div class="staging-notice" role="note">Protected staging preview · Test payments only · No real charges</div>
+<header class="site app-header"><div class="wrap"><a href="/" aria-label="CalvinsonIT home"><img src="/assets/logo/calvinsonit-logo-dark.svg" alt="CalvinsonIT" width="180" height="45"></a><nav aria-label="Main navigation"><a href="/#services">Services</a><a href="/contact/">Contact</a></nav></div></header>
+<main id="main" class="app-main wrap">
+
+<div class="app-intro"><p class="eyebrow">Administration</p><h1>Order administration</h1><p>Review test orders, upload reports and reply to clients.</p></div>
+<p id="page-message" class="app-message" role="status" aria-live="polite">Loading administration…</p>
+
+<section id="auth-panel" class="app-card" aria-labelledby="auth-heading" hidden>
+  <h2 id="auth-heading">Sign in to continue</h2>
+  <p>Use your admitted staging test account with an email sign-in link or Google.</p>
+  <form id="sign-in-form" class="app-form">
+    <label for="sign-in-email">Email address</label>
+    <input id="sign-in-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+    <button class="btn btn-teal" type="submit">Email a sign-in link</button>
+  </form>
+  <p class="form-help">Open the email link in this browser to continue your intake.</p>
+  <button id="google-sign-in" class="btn app-secondary" type="button">Continue with Google</button>
+  <p id="auth-message" class="app-message" role="status" aria-live="polite"></p>
+</section>
+<div id="signed-in" class="signed-in" hidden><span>Signed in as <strong id="signed-in-email"></strong></span><button id="sign-out" type="button" class="text-button">Sign out</button></div>
+
+<section id="admin-list" class="app-card" hidden><h2>Test orders</h2><ul id="admin-orders" class="file-list"></ul><div class="app-actions"><button id="admin-previous" class="btn app-secondary" type="button">Previous orders</button><button id="admin-next" class="btn app-secondary" type="button">Next orders</button><button id="admin-refresh" class="btn app-secondary" type="button">Refresh orders</button></div></section>
+<section id="admin-detail" class="app-card" hidden><h2>Order detail</h2><dl class="order-details"><div><dt>ID</dt><dd id="admin-order-id" class="order-id"></dd></div><div><dt>Service</dt><dd id="admin-order-service"></dd></div><div><dt>Client</dt><dd id="admin-client"></dd></div><div><dt>Status</dt><dd id="admin-order-status"></dd></div><div><dt>Due date</dt><dd id="admin-due"></dd></div></dl><p><a id="admin-payment" target="_blank" rel="noopener noreferrer" hidden>View Stripe test payment</a></p><h3>Intake</h3><pre id="admin-intake"></pre><h3>Intake files</h3><ul id="admin-input-files" class="file-list"></ul>
+  <section aria-labelledby="reports-heading"><h3 id="reports-heading">Reports</h3><p id="fulfilment-status"></p><ul id="report-files" class="file-list"></ul></section>
+  <section aria-labelledby="messages-heading"><h3 id="messages-heading">Order messages</h3><ul id="message-list" class="file-list"></ul>
+  <form id="message-form" class="app-form"><label for="message-body">Message about this order</label><textarea id="message-body" name="body" maxlength="3000" required></textarea><button type="submit" class="btn app-secondary">Send order message</button></form>
+  <p id="workspace-message" class="app-message" role="status" aria-live="polite"></p></section>
+<form id="report-upload-form" class="app-form" hidden><label for="report-upload">Report file</label><input id="report-upload" type="file" accept=".pdf,.csv,.xlsx,.zip" required><p>PDF, CSV, XLSX or ZIP, at most 10 MiB. Uploading marks the report ready and queues a client email.</p><button type="submit" class="btn btn-teal">Upload report</button></form></section>
+</main><footer class="app-footer"><div class="wrap"><a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a></div></footer></body></html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Contact | CalvinsonIT</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Geist:wght@400..700&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/app.css">
+<script type="module" src="/assets/app.js"></script>
+</head>
+<body data-page="contact">
+<a class="skip" href="#main">Skip to content</a>
+<div class="staging-notice" role="note">Protected staging preview · Test payments only · No real charges</div>
+<header class="site app-header"><div class="wrap"><a href="/" aria-label="CalvinsonIT home"><img src="/assets/logo/calvinsonit-logo-dark.svg" alt="CalvinsonIT" width="180" height="45"></a><nav aria-label="Main navigation"><a href="/#services">Services</a><a href="/contact/">Contact</a></nav></div></header>
+<main id="main" class="app-main wrap">
+
+<div class="app-intro"><p class="eyebrow">Contact CalvinsonIT</p><h1>Ask about a service or order.</h1><p>We serve businesses across the United States. Every available service has a listed fixed price.</p></div>
+<p id="page-message" class="app-message" role="status" aria-live="polite">Loading contact form…</p>
+<section id="contact-panel" class="app-card" hidden>
+  <h2>Send a message</h2>
+  <form id="contact-form" class="app-form">
+    <label for="contact-name">Your name</label>
+    <input id="contact-name" name="name" type="text" autocomplete="name" minlength="2" maxlength="120" required>
+    <label for="contact-email">Email address</label>
+    <input id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+    <label for="contact-service">Service <span class="optional">(optional)</span></label>
+    <select id="contact-service" name="serviceId"><option value="">General question or existing order</option></select>
+    <label for="contact-message">Message</label>
+    <textarea id="contact-message" name="message" rows="6" minlength="10" maxlength="3000" required></textarea>
+    <p class="form-help">Include an order ID if you have one. Do not send passwords, card details or sensitive files here. This form does not subscribe you to a mailing list.</p>
+    <button class="btn btn-teal" type="submit">Send message</button>
+  </form>
+  <p id="contact-result" class="app-message" role="status" aria-live="polite"></p>
+</section>
+<noscript><p class="form-note">JavaScript is needed to submit the contact form.</p></noscript>
+
+</main>
+<footer class="app-footer"><div class="wrap"><p>CalvinsonIT · Fixed-price tech services across the United States.</p><p><a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a> · <a href="/contact/">Contact</a></p></div></footer>
+</body>
+</html>

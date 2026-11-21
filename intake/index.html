@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Service intake | CalvinsonIT</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Geist:wght@400..700&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/app.css">
+<script type="module" src="/assets/app.js"></script>
+</head>
+<body data-page="intake">
+<a class="skip" href="#main">Skip to content</a>
+<div class="staging-notice" role="note">Protected staging preview · Test payments only · No real charges</div>
+<header class="site app-header"><div class="wrap"><a href="/" aria-label="CalvinsonIT home"><img src="/assets/logo/calvinsonit-logo-dark.svg" alt="CalvinsonIT" width="180" height="45"></a><nav aria-label="Main navigation"><a href="/#services">Services</a><a href="/contact/">Contact</a></nav></div></header>
+<main id="main" class="app-main wrap">
+
+<div class="app-intro"><p class="eyebrow">Service intake</p><h1 id="intake-title">Start your order</h1><p>Complete the details for your selected service, then review your order before test checkout.</p></div>
+<p id="page-message" class="app-message" role="status" aria-live="polite">Loading service details…</p>
+
+<section id="auth-panel" class="app-card" aria-labelledby="auth-heading" hidden>
+  <h2 id="auth-heading">Sign in to continue</h2>
+  <p>Use your admitted staging test account with an email sign-in link or Google.</p>
+  <form id="sign-in-form" class="app-form">
+    <label for="sign-in-email">Email address</label>
+    <input id="sign-in-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+    <button class="btn btn-teal" type="submit">Email a sign-in link</button>
+  </form>
+  <p class="form-help">Open the email link in this browser to continue your intake.</p>
+  <button id="google-sign-in" class="btn app-secondary" type="button">Continue with Google</button>
+  <p id="auth-message" class="app-message" role="status" aria-live="polite"></p>
+</section>
+<div id="signed-in" class="signed-in" hidden><span>Signed in as <strong id="signed-in-email"></strong></span><button id="sign-out" type="button" class="text-button">Sign out</button></div>
+
+<section id="intake-panel" class="app-card" aria-labelledby="intake-heading" hidden>
+  <h2 id="intake-heading">Tell us about the job</h2>
+  <form id="intake-form" class="app-form">
+    <label for="service">Service and fixed price</label>
+    <select id="service" name="serviceId" required></select>
+    <div id="service-summary" class="service-summary"></div>
+    <p id="hosted-note" class="form-note" hidden>Hosted Feed Build is not accepting orders. Final hosting terms await approval.</p>
+    <label for="business-name">Business name</label>
+    <input id="business-name" name="businessName" type="text" autocomplete="organization" minlength="2" maxlength="160" required>
+    <label for="website">Business website</label>
+    <input id="website" name="website" type="url" placeholder="https://example.com" maxlength="500" pattern="https://.*" required aria-describedby="website-help">
+    <p id="website-help" class="form-help">Use a full HTTPS website address.</p>
+    <fieldset id="audit-fields">
+      <legend>AI visibility details</legend>
+      <label for="services">Services or products you want to be found for</label>
+      <textarea id="services" name="services" rows="3" minlength="2" maxlength="2000" required></textarea>
+      <label for="markets">Markets and customers you serve</label>
+      <textarea id="markets" name="markets" rows="3" minlength="2" maxlength="1000" required placeholder="For example: residential customers across the United States"></textarea>
+      <label for="competitors">Competitors to consider <span class="optional">(optional)</span></label>
+      <textarea id="competitors" name="competitors" rows="2" maxlength="2000"></textarea>
+    </fieldset>
+    <fieldset id="catalog-fields" disabled hidden>
+      <legend>Catalog details</legend>
+      <label for="product-count">Number of products or parts</label>
+      <input id="product-count" name="productCount" type="number" min="1" max="2000" step="1" required>
+      <div id="distributor-field" hidden>
+        <label for="distributor-count">Number of distributors</label>
+        <input id="distributor-count" name="distributorCount" type="number" min="1" max="3" step="1">
+      </div>
+      <label for="intake-files">Supplier files</label>
+      <input id="intake-files" name="files" type="file" accept=".csv,.xlsx" required aria-describedby="file-help">
+      <p id="file-help" class="form-help">CSV or XLSX only, up to 10 MiB per file. Upload only files you may share. Do not include passwords or unnecessary sensitive information.</p>
+    </fieldset>
+    <label for="notes">Anything else we should know? <span class="optional">(optional)</span></label>
+    <textarea id="notes" name="notes" rows="3" maxlength="3000"></textarea>
+    <label class="checkbox-label" for="terms-accepted"><input id="terms-accepted" name="termsAccepted" type="checkbox" required><span>I have read the <a href="/terms.html" target="_blank" rel="noopener">staging terms</a> and <a href="/privacy.html" target="_blank" rel="noopener">privacy notice</a>. I understand this is a test order with no real charge.</span></label>
+    <button class="btn btn-teal" type="submit">Save intake and review order</button>
+  </form>
+  <p id="intake-message" class="app-message" role="status" aria-live="polite"></p>
+  <a id="resume-order" class="btn app-secondary" hidden>Continue saved order</a>
+</section>
+<noscript><p class="form-note">JavaScript is needed for managed sign-in and the intake form.</p></noscript>
+
+</main>
+<footer class="app-footer"><div class="wrap"><p>CalvinsonIT · Fixed-price tech services across the United States.</p><p><a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a> · <a href="/contact/">Contact</a></p></div></footer>
+</body>
+</html>

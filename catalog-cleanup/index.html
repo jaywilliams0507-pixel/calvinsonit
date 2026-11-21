@@ -14,8 +14,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/app.css">
 </head>
 <body data-chat="off">
+<div class="staging-notice" role="note">Protected staging preview · Test payments only · No real charges</div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <linearGradient id="gHead" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#17467F"/><stop offset="1" stop-color="#0B2545"/></linearGradient>
@@ -52,7 +54,7 @@
   <div class="wrap">
     <a class="lockup" href="/" aria-label="CalvinsonIT home"><svg viewBox="0 12 403 76" role="img" aria-label="CalvinsonIT"><use href="#wordmark" width="403" height="100"/></svg></a>
     <nav class="primary" aria-label="Main">
-      <span class="links"><a href="/#about">About</a><a href="/#services">Services</a><a href="/#how">How it works</a><a href="mailto:hello@calvinsonit.org">Email us</a></span>
+      <span class="links"><a href="/#about">About</a><a href="/#services">Services</a><a href="/#how">How it works</a><a href="/contact/">Contact us</a></span>
       <a class="btn btn-teal" href="/#services">Start a project</a>
     </nav>
   </div>
@@ -67,22 +69,33 @@
       <div style="min-width:0">
         <nav class="crumbs" aria-label="Breadcrumb"><a href="/">CalvinsonIT</a><span>/</span><a href="/#services">Services</a><span>/</span><span style="color:var(--band-fg)">Shopify Catalog &amp; Feed Cleanup</span></nav>
         <h1>Supplier spreadsheets in. <span class="grad-text">A store ready to sell out.</span></h1>
-        <p class="lede">Three suppliers, three formats, duplicate parts and missing prices. We merge it into one clean catalog and load it into Shopify.</p>
+        <p class="lede">Choose a fixed-price package for your supplier files. We clean duplicates, standardize the catalog and prepare the Shopify import.</p>
         <div class="ctas">
-          <a class="btn btn-teal" href="mailto:hello@calvinsonit.org?subject=Catalog%20Starter">Get the $189 Starter <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+          <a class="btn btn-teal" href="/intake/?service=catalog-starter">Get the $189 Starter <svg aria-hidden="true"><use href="#arrow"/></svg></a>
         </div>
       </div>
       <aside class="buybox" id="catalog-buy">
         <div class="p"><b class="num">$189</b><span>Starter · up to 2,000 products</span></div>
         <ul>
-          <li><svg aria-hidden="true"><use href="#tick"/></svg>Supplier files merged into one catalog</li>
+          <li><svg aria-hidden="true"><use href="#tick"/></svg>One supplier file cleaned into a consistent catalog</li>
           <li><svg aria-hidden="true"><use href="#tick"/></svg>Duplicates removed, titles and prices fixed</li>
           <li><svg aria-hidden="true"><use href="#tick"/></svg>Shopify import file, tested before handoff</li>
           <li><svg aria-hidden="true"><use href="#tick"/></svg>Cleaned files, import settings and a guide</li>
         </ul>
-        <a class="btn btn-teal" href="mailto:hello@calvinsonit.org?subject=Catalog%20Starter">Get the Starter <svg aria-hidden="true"><use href="#arrow"/></svg></a>
-        <p class="note">Email us to discuss the Starter. Full Catalog Cleanup is $590 for up to 6,000 parts and 3 files; Hosted Feed Build is $1,490 for up to 10,000 parts and 3 distributors.</p>
+        <a class="btn btn-teal" href="/intake/?service=catalog-starter">Get the Starter <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+        <p class="note">Starter covers up to 2,000 products in one file. Complete the intake and use Stripe test checkout. No real charge in this preview.</p>
       </aside>
+    </div>
+  </section>
+
+  <section class="block" id="packages">
+    <div class="wrap">
+      <div class="head reveal"><div><div class="eyebrow">Fixed-price packages</div><h2>Choose the scope you need.</h2></div><p>Every package has one listed price. This protected preview uses test payments only.</p></div>
+      <div class="package-grid">
+        <article class="package-card"><h3>Catalog Starter</h3><p class="package-price">$189</p><p>Up to 2,000 products in one supplier file.</p><a class="btn btn-teal" href="/intake/?service=catalog-starter">Start Starter intake</a></article>
+        <article class="package-card"><h3>Full Catalog Cleanup</h3><p class="package-price">$590</p><p>Up to 6,000 parts and three files.</p><a class="btn btn-teal" href="/intake/?service=catalog-full">Start Full intake</a></article>
+        <article class="package-card"><h3>Hosted Feed Build</h3><p class="package-price">$1,490</p><p>Up to 10,000 parts and three distributors. Includes 12 runs and three format fixes in 90 days.</p><p class="form-help">Not accepting orders. Final hosting terms await approval.</p><p class="form-note">Hosted checkout is unavailable.</p></article>
+      </div>
     </div>
   </section>
 
@@ -103,7 +116,7 @@
           <ul>
             <li><svg class="lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5" fill="none" stroke="var(--muted)" stroke-width="1.8"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="var(--muted)" stroke-width="1.8"/></svg>The scripts that do the cleaning</li>
           </ul>
-          <p>When your suppliers send new files, we rerun them for you, quickly and for less.</p>
+          <p>Hosted Feed Build includes 12 runs and 3 format fixes in 90 days. Its final hosting terms must be approved before production checkout opens.</p>
         </div>
       </div>
     </div>
@@ -111,9 +124,9 @@
 
   <section class="block">
     <div class="wrap">
-      <div class="head reveal"><div><div class="eyebrow">How it works</div><h2>From spreadsheet to storefront.</h2></div><p>You see the result on your own data before you commit to anything bigger.</p></div>
+      <div class="head reveal"><div><div class="eyebrow">How it works</div><h2>From spreadsheet to storefront.</h2></div><p>Choose a package, complete intake and pay the fixed price before work starts.</p></div>
       <ol class="steps4">
-        <li class="reveal"><h3>Send your files</h3><p>Supplier spreadsheets, as they are.</p></li>
+        <li class="reveal"><h3>Send your files</h3><p>Upload CSV or XLSX supplier files through the private intake form.</p></li>
         <li class="reveal"><h3>We clean and merge</h3><p>One format, no duplicates, missing prices flagged.</p></li>
         <li class="reveal"><h3>You check a sample</h3><p>Approve the format before the full import.</p></li>
         <li class="reveal"><h3>Import and handoff</h3><p>Live in Shopify, with your files, settings and guide.</p></li>
@@ -125,8 +138,8 @@
     <div class="wrap">
       <div class="head reveal" style="margin-bottom:32px"><div><div class="eyebrow">Questions</div><h2>Common questions</h2></div><p></p></div>
       <div class="faq">
-        <details open><summary>What file types work?</summary><p>CSV and Excel files, straight from your suppliers.</p></details>
-                <details><summary>What happens after the Starter?</summary><p>Full Catalog Cleanup is $590 for up to 6,000 parts and 3 files. Hosted Feed Build is $1,490 for up to 10,000 parts and 3 distributors, including 12 runs and 3 format fixes in 90 days.</p></details>
+        <details open><summary>What file types work?</summary><p>CSV and XLSX files, up to 10 MiB each. Starter accepts one file; Full and Hosted accept up to three. Do not include passwords or unnecessary sensitive information.</p></details>
+                <details><summary>What happens after the Starter?</summary><p>Full Catalog Cleanup is $590 for up to 6,000 parts and 3 files. Hosted Feed Build is $1,490 for up to 10,000 parts and 3 distributors, including 12 runs and 3 format fixes in 90 days. Hosted checkout is unavailable while its final hosting terms await approval.</p></details>
       </div>
     </div>
   </section>
@@ -150,7 +163,7 @@
         <p>Fixed-price tech services for small businesses across the US.</p>
       </div>
       <div><h4>Services</h4><a href="/ai-visibility-audit/">AI Answer Visibility Audit</a><a href="/google-business-profile/">Google Business Profile</a><a href="/catalog-cleanup/">Catalog &amp; Feed Cleanup</a><a href="/automation/">Business Automation</a></div>
-      <div><h4>Company</h4><a href="/#about">About</a><a href="/#how">How it works</a><a href="mailto:hello@calvinsonit.org">Email us</a></div>
+      <div><h4>Company</h4><a href="/#about">About</a><a href="/#how">How it works</a><a href="/contact/">Contact us</a></div>
       <div><h4>Contact</h4><address>CalvinsonIT<br>13245 Atlantic Blvd STE 4106<br>Jacksonville, FL 32225</address><a href="mailto:hello@calvinsonit.org" style="display:block;margin-top:10px;color:var(--band-fg);user-select:all">hello@calvinsonit.org</a></div>
     </div>
     <div class="legal"><span>© 2026 CalvinsonIT. All rights reserved.</span><span><a href="/terms.html" style="text-decoration:none">Terms</a> &nbsp;·&nbsp; <a href="/privacy.html" style="text-decoration:none">Privacy</a></span></div>
